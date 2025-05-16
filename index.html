@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <!-- Add Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <style>
+<style>
     * {
       margin: 0;
       padding: 0;
@@ -92,117 +92,115 @@
     }
 
     /* Desktop navigation - hidden on mobile */
- #desktop-nav {
-  display: flex;
-}
+    #desktop-nav {
+      display: flex;
+    }
 
-#desktop-nav ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    #desktop-nav ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-#desktop-nav ul li {
-  position: relative;
-  margin: 0 10px;
-}
+    #desktop-nav ul li {
+      position: relative;
+      margin: 0 10px;
+    }
 
-#desktop-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 16px;
-  padding: 8px 15px;
-  display: block;
-  position: relative;
-  transition: color 0.3s ease;
-  z-index: 0;
-}
+    #desktop-nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 8px 15px;
+      display: block;
+      position: relative;
+      transition: color 0.3s ease;
+      z-index: 0;
+    }
 
-/* Light mode: override color */
-body[data-theme="light"] #desktop-nav ul li a {
-  color: black;
-}
+    /* Light mode: override color */
+    body[data-theme="light"] #desktop-nav ul li a {
+      color: black;
+    }
 
+    /* Create 4 glowing border lines initially hidden */
+    #desktop-nav ul li a::before,
+    #desktop-nav ul li a::after,
+    #desktop-nav ul li a span::before,
+    #desktop-nav ul li a span::after {
+      content: '';
+      position: absolute;
+      background: #00a8e1;
+      transition: all 0.4s ease;
+      opacity: 0;
+      border-radius: 2px;
+    }
 
-/* Create 4 glowing border lines initially hidden */
-#desktop-nav ul li a::before,
-#desktop-nav ul li a::after,
-#desktop-nav ul li a span::before,
-#desktop-nav ul li a span::after {
-  content: '';
-  position: absolute;
-  background: #00a8e1;
-  transition: all 0.4s ease;
-  opacity: 0;
-  border-radius: 2px;
-}
+    /* Top and Bottom lines */
+    #desktop-nav ul li a::before,
+    #desktop-nav ul li a::after {
+      left: 0;
+      width: 100%;
+      height: 2px;
+    }
 
-/* Top and Bottom lines */
-#desktop-nav ul li a::before,
-#desktop-nav ul li a::after {
-  left: 0;
-  width: 100%;
-  height: 2px;
-}
+    #desktop-nav ul li a::before {
+      top: 0;
+      transform: translateX(-100%);
+    }
 
-#desktop-nav ul li a::before {
-  top: 0;
-  transform: translateX(-100%);
-}
+    #desktop-nav ul li a::after {
+      bottom: 0;
+      transform: translateX(100%);
+    }
 
-#desktop-nav ul li a::after {
-  bottom: 0;
-  transform: translateX(100%);
-}
+    /* Left and Right lines (using a span inside link) */
+    #desktop-nav ul li a > span {
+      position: relative;
+      display: inline-block;
+    }
 
-/* Left and Right lines (using a span inside link) */
-#desktop-nav ul li a > span {
-  position: relative;
-  display: inline-block;
-}
+    #desktop-nav ul li a span::before,
+    #desktop-nav ul li a span::after {
+      top: 0;
+      width: 2px;
+      height: 100%;
+    }
 
-#desktop-nav ul li a span::before,
-#desktop-nav ul li a span::after {
-  top: 0;
-  width: 2px;
-  height: 100%;
-}
+    #desktop-nav ul li a span::before {
+      left: 0;
+      transform: translateY(-100%);
+    }
 
-#desktop-nav ul li a span::before {
-  left: 0;
-  transform: translateY(-100%);
-}
+    #desktop-nav ul li a span::after {
+      right: 0;
+      transform: translateY(100%);
+    }
 
-#desktop-nav ul li a span::after {
-  right: 0;
-  transform: translateY(100%);
-}
+    /* On hover or active: show the glowing lines and change text color only */
+    #desktop-nav ul li a:hover,
+    #desktop-nav ul li a.active {
+      color: #00a8e1;
+      z-index: 1;
+    }
 
-/* On hover or active: show the glowing lines and change text color only */
-#desktop-nav ul li a:hover,
-#desktop-nav ul li a.active {
-  color: #00a8e1;
-  /* NO text-shadow here */
-  z-index: 1;
-}
-
-#desktop-nav ul li a:hover::before,
-#desktop-nav ul li a:hover::after,
-#desktop-nav ul li a:hover > span::before,
-#desktop-nav ul li a:hover > span::after,
-#desktop-nav ul li a.active::before,
-#desktop-nav ul li a.active::after,
-#desktop-nav ul li a.active > span::before,
-#desktop-nav ul li a.active > span::after {
-  opacity: 1;
-  transform: translate(0, 0);
-}
+    #desktop-nav ul li a:hover::before,
+    #desktop-nav ul li a:hover::after,
+    #desktop-nav ul li a:hover > span::before,
+    #desktop-nav ul li a:hover > span::after,
+    #desktop-nav ul li a.active::before,
+    #desktop-nav ul li a.active::after,
+    #desktop-nav ul li a.active > span::before,
+    #desktop-nav ul li a.active > span::after {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
 
     body[data-theme="light"] #desktop-nav ul li a {
-  color: black;
-}
+      color: black;
+    }
 
     #desktop-nav ul li a:hover, 
     #desktop-nav ul li a.active {
@@ -369,19 +367,19 @@ body[data-theme="light"] #desktop-nav ul li a {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 30px 5%;
+      padding: 40px 5%; /* Increased from 30px */
     }
 
-    /* Calculator Section */
+    /* Calculator Section - Updated for larger size */
     .calculator-section {
       background: linear-gradient(135deg, #14202d, #0f1923);
       border-radius: 15px;
-      padding: 25px;
+      padding: 35px; /* Increased from 25px */
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
       overflow: hidden;
-      max-width: 600px;
+      max-width: 750px; /* Increased from 600px */
       margin: 0 auto;
       width: 100%;
     }
@@ -398,14 +396,14 @@ body[data-theme="light"] #desktop-nav ul li a {
     }
     
     .calculator-header {
-      margin-bottom: 20px;
+      margin-bottom: 25px; /* Increased from 20px */
       text-align: center;
     }
     
     .calculator-title {
-      font-size: 22px;
+      font-size: 24px; /* Increased from 22px */
       color: #ffffff;
-      margin-bottom: 10px;
+      margin-bottom: 12px; /* Increased from 10px */
       font-weight: 700;
       position: relative;
       display: inline-block;
@@ -424,46 +422,47 @@ body[data-theme="light"] #desktop-nav ul li a {
     
     .calculator-description {
       color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
-      margin-top: 10px;
+      font-size: 15px; /* Increased from 14px */
+      margin-top: 12px; /* Increased from 10px */
     }
     
-    /* Input fields */
+    /* Input fields - Updated for larger size */
     .input-container {
-      margin-bottom: 15px;
+      margin-bottom: 20px; /* Increased from 15px */
     }
     
     .input-container label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px; /* Increased from 8px */
       font-weight: 600;
       color: #00a8e1;
+      font-size: 16px; /* Added for consistency */
     }
     
-.input-container select,
-.input-container input {
-  width: 100%;
-  padding: 12px 15px;
-  background: rgba(253, 253, 253, 0);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: white;
-  font-size: 16px;
-  transition: all 0.3s;
-}
+    .input-container select,
+    .input-container input {
+      width: 100%;
+      padding: 15px 20px; /* Increased from 12px 15px */
+      background: rgba(253, 253, 253, 0);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: white;
+      font-size: 17px; /* Increased from 16px */
+      transition: all 0.3s;
+    }
 
-/* Black background for Percentage Required select when focused (both light and dark mode) */
-#percentage:focus {
-  background-color: #908585 !important;
-  color: #fff !important;
-  border-color: #00a8e1;
-}
+    /* Black background for Percentage Required select when focused */
+    #percentage:focus {
+      background-color: #908585 !important;
+      color: #fff !important;
+      border-color: #00a8e1;
+    }
 
-/* Ensure #percentage:focus remains black in light mode as well */
-body[data-theme="light"] #percentage:focus {
-  background-color: #908585 !important;
-  color: #fff !important;
-}
+    /* Ensure #percentage:focus remains black in light mode as well */
+    body[data-theme="light"] #percentage:focus {
+      background-color: #908585 !important;
+      color: #fff !important;
+    }
 
     .input-container select:focus,
     .input-container input:focus {
@@ -472,28 +471,28 @@ body[data-theme="light"] #percentage:focus {
       box-shadow: 0 0 0 3px rgba(0, 168, 225, 0.2);
     }
     
-    /* Button styles */
+    /* Button styles - Updated for larger size */
     .button-group {
       display: flex;
-      gap: 15px;
-      margin-top: 20px;
+      gap: 20px; /* Increased from 15px */
+      margin-top: 25px; /* Increased from 20px */
     }
     
     .calculate-btn {
       flex: 1;
-      padding: 12px;
+      padding: 16px; /* Increased from 12px */
       background: linear-gradient(135deg, #00a8e1, #0077b6);
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 17px; /* Increased from 16px */
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px; /* Increased from 8px */
     }
     
     .calculate-btn:hover {
@@ -504,19 +503,19 @@ body[data-theme="light"] #percentage:focus {
     
     .reset-btn {
       flex: 1;
-      padding: 12px;
+      padding: 16px; /* Increased from 12px */
       background: rgba(255, 255, 255, 0.1);
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 17px; /* Increased from 16px */
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px; /* Increased from 8px */
     }
     
     .reset-btn:hover {
@@ -524,42 +523,43 @@ body[data-theme="light"] #percentage:focus {
       transform: translateY(-2px);
     }
     
-    /* Results section */
+    /* Results section - Updated for larger size */
     .results-container {
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 30px; /* Increased from 20px */
+      padding: 20px; /* Increased from 15px */
       background: rgba(0, 168, 225, 0.1);
       border-radius: 8px;
       border-left: 3px solid #00a8e1;
     }
     
     .results-title {
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-size: 19px; /* Increased from 16px */
+      margin-bottom: 15px; /* Increased from 10px */
       color: #00a8e1;
-      font-weight: 600;
+      font-weight: 700;
     }
     
     .results-content {
       color: rgba(255, 255, 255, 0.9);
       line-height: 1.6;
-      font-size: 14px;
+      font-size: 16px; /* Increased from 14px */
     }
     
     .results-content strong {
       color: white;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 17px; /* Slightly larger than regular text */
     }
     
     /* GIF container */
     .gif-container {
-      margin-top: 20px;
+      margin-top: 25px; /* Increased from 20px */
       display: none;
       justify-content: center;
     }
     
     .attendance-gif {
-      max-width: 300px;
+      max-width: 450px; /* Increased from 300px */
       width: 100%;
       border-radius: 10px;
       user-select: none;
@@ -571,7 +571,7 @@ body[data-theme="light"] #percentage:focus {
     /* Footer */
     footer {
       background: linear-gradient(180deg, #0a121b, #070d14);
-      padding: 20px 5%;
+      padding: 25px 5%; /* Increased from 20px */
       position: relative;
       overflow: hidden;
       margin-top: auto;
@@ -599,7 +599,7 @@ body[data-theme="light"] #percentage:focus {
 
     .footer-content p {
       color: rgba(255,255,255,0.7);
-      font-size: 14px;
+      font-size: 15px; /* Increased from 14px */
       margin: 0;
     }
 
@@ -608,12 +608,12 @@ body[data-theme="light"] #percentage:focus {
       position: relative;
       display: inline-flex;
       align-items: center;
-      padding: 10px 20px;
+      padding: 12px 22px; /* Increased from 10px 20px */
       color: white;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px; /* Increased from 14px */
       border: none;
       cursor: pointer;
       overflow: hidden;
@@ -623,7 +623,7 @@ body[data-theme="light"] #percentage:focus {
     }
 
     .telegram-btn i {
-      margin-right: 8px;
+      margin-right: 10px; /* Increased from 8px */
       transition: all 0.3s ease;
     }
 
@@ -696,10 +696,12 @@ body[data-theme="light"] #percentage:focus {
     
     body[data-theme="light"] .results-content {
       color: rgba(0, 0, 0, 0.8);
+      font-size: 16px;
     }
     
     body[data-theme="light"] .results-content strong {
       color: #333;
+      font-size: 17px;
     }
     
     body[data-theme="light"] footer {
@@ -743,12 +745,71 @@ body[data-theme="light"] #percentage:focus {
         padding: 10px 5%;
       }
 
+      .main-content {
+        padding: 30px 5%; /* Reset to original value */
+      }
+
       .calculator-section {
-        padding: 20px;
+        padding: 25px; /* Reset to original value */
+        max-width: 600px; /* Reset to original value */
+      }
+      
+      .calculator-header {
+        margin-bottom: 20px; /* Reset to original value */
+      }
+      
+      .calculator-title {
+        font-size: 22px; /* Reset to original value */
+      }
+      
+      .calculator-description {
+        font-size: 14px; /* Reset to original value */
+      }
+      
+      .input-container {
+        margin-bottom: 15px; /* Reset to original value */
+      }
+      
+      .input-container label {
+        margin-bottom: 8px; /* Reset to original value */
+      }
+      
+      .input-container select,
+      .input-container input {
+        padding: 12px 15px; /* Reset to original value */
+        font-size: 16px; /* Reset to original value */
       }
       
       .button-group {
-        flex-direction: column;
+        gap: 15px; /* Reset to original value */
+        margin-top: 20px; /* Reset to original value */
+      }
+      
+      .calculate-btn,
+      .reset-btn {
+        padding: 12px; /* Reset to original value */
+        font-size: 16px; /* Reset to original value */
+      }
+      
+      .results-container {
+        margin-top: 20px; /* Reset to original value */
+        padding: 15px; /* Reset to original value */
+      }
+      
+      .results-title {
+        font-size: 16px; /* Reset to original value */
+      }
+      
+      .results-content {
+        font-size: 14px; /* Reset to original value */
+      }
+      
+      .gif-container {
+        margin-top: 20px; /* Reset to original value */
+      }
+      
+      .attendance-gif {
+        max-width: 360px; /* Reset to original value */
       }
       
       .footer-content {
@@ -760,6 +821,12 @@ body[data-theme="light"] #percentage:focus {
       .telegram-btn {
         width: 100%;
         justify-content: center;
+        padding: 10px 20px; /* Reset to original value */
+        font-size: 14px; /* Reset to original value */
+      }
+
+      footer {
+        padding: 20px 5%; /* Reset to original value */
       }
     }
 
@@ -805,6 +872,7 @@ body[data-theme="light"] #percentage:focus {
       }
     }
   </style>
+
 </head>
 
 <body>
@@ -836,7 +904,7 @@ body[data-theme="light"] #percentage:focus {
     </button>
     <nav>
       <ul>
-        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
@@ -903,6 +971,10 @@ body[data-theme="light"] #percentage:focus {
   </footer>
 
   <script>
+
+
+
+    
     // DOM Elements
     const percentageSelect = document.getElementById("percentage");
     const presentInput = document.getElementById("present-input");
@@ -971,49 +1043,54 @@ body[data-theme="light"] #percentage:focus {
       const currentAttendance = (present / total) * 100;
 
       // Show appropriate GIF based on attendance percentage
-      if (currentAttendance === 100) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
-      } else if (currentAttendance >= 90 && currentAttendance < 100) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
-      } else if (currentAttendance === 85) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
-      } else if (currentAttendance >= 86 && currentAttendance <= 89) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
-      } else if (currentAttendance >= 80 && currentAttendance < 85) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
-      } else if (currentAttendance >= 75 && currentAttendance <= 79) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
-      } else if (currentAttendance >= 70 && currentAttendance <= 74) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/pbFS8uGfeIIAAAAC/troop-originals-telugu-memes.gif";
-      } else if (currentAttendance >= 60 && currentAttendance <= 69) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
-      } else if (currentAttendance >= 30 && currentAttendance <= 59) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
-      } else if (currentAttendance < 30) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
-      } else {
-        gifContainer.style.display = "none";
-      }
+if (currentAttendance === 100) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
+} else if (currentAttendance >= 90 && currentAttendance < 100) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
+} else if (currentAttendance === 85) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
+} else if (currentAttendance >= 86 && currentAttendance <= 89) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
+} else if (currentAttendance >= 80 && currentAttendance <= 84) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
+} else if (currentAttendance === 75) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
+} else if (currentAttendance >= 76 && currentAttendance <= 79) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
+} else if (currentAttendance >= 70 && currentAttendance <= 74) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/wr8kJmGOJo4AAAAC/king-srihari.gif";
+} else if (currentAttendance >= 60 && currentAttendance <= 69) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
+} else if (currentAttendance >= 30 && currentAttendance <= 59) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
+} else if (currentAttendance < 30) {
+  gifContainer.style.display = "flex";
+  document.getElementById("attendance-gif").src =
+    "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
+} else {
+  gifContainer.style.display = "none";
+}
+
 
       // Determine if user can bunk or needs to attend more classes
       if (currentAttendance >= percentage) {
