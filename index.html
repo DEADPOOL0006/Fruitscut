@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AADS WORKBOOK</title>
+  <title>KLU Attendance Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <!-- Add Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -39,10 +39,10 @@
       src: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-sans._TTH_.ttf') format('truetype');
     }
 
-    /* Header with mobile toggle - Optimized for smooth scrolling */
+    /* Header */
     header {
       background: rgba(15, 25, 35, 0.95);
-      padding: 15px 5%;
+      padding: 10px 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -59,7 +59,6 @@
     header.scrolled {
       transform: translateY(0);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      padding: 10px 5%;
     }
 
     .logo {
@@ -69,61 +68,12 @@
 
     .logo h1 {
       color: #00a8e1;
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 0 0 10px rgba(0, 168, 225, 0.3);
       transition: all 0.3s;
-    }
-
-    /* Theme Toggle Button */
-    .theme-toggle {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      margin-left: 15px;
-      transition: all 0.3s;
-      position: relative;
-      padding: 5px;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Theme toggle icon colors */
-    .bi-sun {
-      color: white;
-    }
-    
-    body[data-theme="light"] .bi-sun {
-      color: black;
-    }
-    
-    .bi-moon {
-      color: black;
-    }
-    
-    body[data-theme="light"] .bi-moon {
-      color: black;
-    }
-
-    /* Menu toggle icon colors */
-    .menu-toggle {
-      color: white;
-    }
-    
-    body[data-theme="light"] .menu-toggle {
-      color: black;
     }
 
     /* Mobile menu button */
@@ -134,8 +84,14 @@
       font-size: 24px;
       cursor: pointer;
       margin-right: 15px;
+      color: white;
+    }
+    
+    body[data-theme="light"] .menu-toggle {
+      color: black;
     }
 
+    /* Desktop navigation - hidden on mobile */
  #desktop-nav {
   display: flex;
 }
@@ -163,6 +119,12 @@
   transition: color 0.3s ease;
   z-index: 0;
 }
+
+/* Light mode: override color */
+body[data-theme="light"] #desktop-nav ul li a {
+  color: black;
+}
+
 
 /* Create 4 glowing border lines initially hidden */
 #desktop-nav ul li a::before,
@@ -238,6 +200,26 @@
   transform: translate(0, 0);
 }
 
+    body[data-theme="light"] #desktop-nav ul li a {
+  color: black;
+}
+
+    #desktop-nav ul li a:hover, 
+    #desktop-nav ul li a.active {
+      color: #00a8e1;
+      transform: translateY(-2px);
+    }
+
+    #desktop-nav ul li a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #00a8e1, #007eb9);
+      border-radius: 2px;
+    }
 
     /* Mobile menu styles */
     .mobile-menu-backdrop {
@@ -253,7 +235,6 @@
       -webkit-backdrop-filter: blur(8px);
     }
 
-    /* Dark mode mobile menu */
     .mobile-menu {
       position: fixed;
       top: 0;
@@ -271,16 +252,6 @@
       will-change: transform;
     }
 
-    .mobile-menu nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      padding: 10px 0;
-      display: block;
-      transition: all 0.3s;
-    }
-
-    /* Light mode mobile menu - blue tint */
     body[data-theme="light"] .mobile-menu {
       background-color: white;
       backdrop-filter: blur(10px);
@@ -288,11 +259,6 @@
       border-right: 1px solid rgba(0, 168, 225, 0.2);
     }
 
-    body[data-theme="light"] .mobile-menu nav ul li a {
-      color: #333;
-    }
-
-    /* Hide header when menu is open */
     body.menu-open header {
       display: none;
     }
@@ -310,7 +276,19 @@
       margin-bottom: 15px;
     }
 
-    /* Dark mode hover and active effect */
+    .mobile-menu nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      padding: 10px 0;
+      display: block;
+      transition: all 0.3s;
+    }
+
+    body[data-theme="light"] .mobile-menu nav ul li a {
+      color: #333;
+    }
+
     .mobile-menu nav ul li a:hover,
     .mobile-menu nav ul li a.active {
       color: yellow;
@@ -321,7 +299,6 @@
       display: block;
     }
 
-    /* Light mode hover and active effect */
     body[data-theme="light"] .mobile-menu nav ul li a:hover,
     body[data-theme="light"] .mobile-menu nav ul li a.active {
       color: yellow;
@@ -347,61 +324,44 @@
       color: #333;
     }
 
-    /* Hero Section */
-    .hero {
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 15px;
+      transition: all 0.3s;
       position: relative;
-      height: 60vh;
+      padding: 5px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
-      padding: 0 5%;
-      overflow: hidden;
-      margin-bottom: 40px;
+      justify-content: center;
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 1;
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
-    body[data-theme="light"] .hero::before {
-      background-color: rgba(0, 0, 0, 0.7);
+    /* Theme toggle icon colors */
+    .bi-sun {
+      color: white;
     }
-
-    .hero-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      opacity: 0.4;
+    
+    body[data-theme="light"] .bi-sun {
+      color: black;
     }
-
-    body[data-theme="light"] .hero-video {
-      opacity: 0.35;
+    
+    .bi-moon {
+      color: black;
     }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-    }
-
-    .hero-content h2 {
-      font-size: 48px;
-      font-weight: 700;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-      line-height: 1.2;
-      background: linear-gradient(to right, #ffffff, #00a8e1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    
+    body[data-theme="light"] .bi-moon {
+      color: black;
     }
 
     /* Main content wrapper */
@@ -409,210 +369,24 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      padding: 30px 5%;
     }
 
-    /* Course Sections */
-    .docs-section {
-      padding: 60px 5%;
-      position: relative;
-    }
-
-    .docs-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(0, 168, 225, 0.5), transparent);
-    }
-
-    .docs-section h2 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      font-weight: 700;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      position: relative;
-      padding-left: 20px;
-      display: inline-block;
-    }
-
-    .docs-section h2::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 5px;
-      background: linear-gradient(to bottom, #00a8e1, #007eb9);
-      border-radius: 3px;
-      box-shadow: 0 0 10px rgba(0, 168, 225, 0.5);
-    }
-
-    .docs-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 25px;
-    }
-
-    .doc-card {
-      background: linear-gradient(135deg, #1a2a3a, #14202d);
-      border-radius: 10px;
-      overflow: hidden;
-      transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                 box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      will-change: transform;
-      transform: translateZ(0);
-    }
-
-    .doc-card:hover {
-      transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-      z-index: 10;
-      border-color: rgba(0, 168, 225, 0.3);
-    }
-
-    .doc-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    /* Dark mode gradient */
-    body:not([data-theme="light"]) .doc-card::after {
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 40%);
-    }
-
-    /* Light mode gradient */
-    body[data-theme="light"] .doc-card::after {
-      background: linear-gradient(to top, rgba(254, 254, 254, 0.833) 0%, rgba(0,0,0,0) 40%);
-    }
-
-    .doc-card:hover::after {
-      opacity: 1;
-    }
-
-    .doc-thumbnail {
-      width: 100%;
-      height: 300px;
-      background-color: #2a3a4a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .doc-thumbnail::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, rgba(0, 168, 225, 0.1), transparent);
-      z-index: 1;
-    }
-
-    .doc-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-
-    .doc-card:hover .doc-thumbnail img {
-      transform: scale(1.1);
-    }
-
-    .doc-info {
-      padding: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .doc-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: white;
-      transition: color 0.3s;
-    }
-
-    .doc-card:hover .doc-title {
-      color: #00a8e1;
-    }
-
-    .doc-meta {
-      color: rgba(255,255,255,0.7);
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .doc-meta span {
-      display: flex;
-      align-items: center;
-    }
-
-    .doc-meta span:first-child::before {
-      content: '\f133';
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      margin-right: 8px;
-      color: #00a8e1;
-      font-size: 12px;
-    }
-
-    .doc-meta span:last-child::before {
-      content: '\f02d';
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      margin-right: 8px;
-      color: #00a8e1;
-      font-size: 12px;
-    }
-
-    /* No results message */
-    .no-results {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px;
-      color: rgba(255,255,255,0.7);
-      font-size: 18px;
-      display: none;
-      transition: opacity 0.2s ease;
-    }
-
-    /* Enhanced Download Section Styles */
-    .download-section {
-      padding: 40px 5%;
+    /* Calculator Section */
+    .calculator-section {
       background: linear-gradient(135deg, #14202d, #0f1923);
       border-radius: 15px;
-      margin: 30px 5%;
+      padding: 25px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
       overflow: hidden;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
     }
     
-    .download-section::before {
+    .calculator-section::before {
       content: '';
       position: absolute;
       top: 0;
@@ -623,210 +397,181 @@
       pointer-events: none;
     }
     
-    .content-grid {
-      display: flex;
-      gap: 40px;
-      position: relative;
-      z-index: 2;
-      align-items: center;
-    }
-    
-    /* Enhanced Poster Container */
-    .poster-container {
-      width: 250px;
-      flex-shrink: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      position: relative;
-      transition: transform 0.3s;
-      border: 2px solid #00a8e1;
-    }
-    
-    .poster-container:hover {
-      transform: translateY(-5px);
-    }
-    
-    .poster-image {
-      width: 100%;
-      height: 300px;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .poster-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-    
-    .poster-container:hover .poster-image img {
-      transform: scale(1.05);
-    }
-
-    /* Download Options */
-    .download-options {
-      flex: 1;
-    }
-    
-    .download-header {
+    .calculator-header {
       margin-bottom: 20px;
+      text-align: center;
     }
     
-    .title-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    
-    .page-title {
-      font-size: 24px;
+    .calculator-title {
+      font-size: 22px;
       color: #ffffff;
-      margin: 0;
+      margin-bottom: 10px;
       font-weight: 700;
-    }
-    
-    .material-tagline {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 15px;
-      margin: 0 0 12px 0;
-    }
-    
-    .download-description {
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 3px solid #00a8e1;
-      padding: 12px;
-      border-radius: 0 5px 5px 0;
-      margin-bottom: 25px;
-    }
-    
-    .download-description p {
-      color: rgba(255, 255, 255, 0.8);
-      margin: 0;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    
-    /* File size indicator */
-    .file-size {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #00a8e1;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-    
-    .file-size i {
-      font-size: 16px;
-    }
-    
-    .download-actions {
-      margin-bottom: 20px;
-    }
-    
-    .download-title {
-      color: #ffffff;
-      font-size: 17px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .download-title i {
-      color: #00a8e1;
-      font-size: 16px;
-    }
-    
-    .download-buttons {
-      display: flex;
-      gap: 20px;
-    }
-    
-    /* Telegram-style Download Buttons */
-    .download-btn {
       position: relative;
-      display: inline-flex;
-      align-items: center;
-      padding: 14px 28px;
-      color: white;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: inline-block;
     }
-
-    .download-btn i {
-      margin-right: 10px;
-      transition: all 0.3s ease;
-    }
-
-    /* Telegram-like wave effect on hover */
-    .download-btn::before {
+    
+    .calculator-title::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
+      bottom: -5px;
+      left: 0;
       width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-      );
-      transition: 0.5s;
+      height: 2px;
+      background: linear-gradient(90deg, #00a8e1, #007eb9);
+      border-radius: 2px;
     }
-
-    .download-btn:hover::before {
-      left: 100%;
+    
+    .calculator-description {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      margin-top: 10px;
     }
-
-    /* Drive button specific styles */
-    .drive-btn {
-      background: linear-gradient(135deg, #4285F4, #3367D6);
+    
+    /* Input fields */
+    .input-container {
+      margin-bottom: 15px;
     }
-
-    .drive-btn:hover {
-      background: linear-gradient(135deg, #3367D6, #2547b3);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(66, 133, 244, 0.4);
+    
+    .input-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #00a8e1;
     }
+    
+.input-container select,
+.input-container input {
+  width: 100%;
+  padding: 12px 15px;
+  background: rgba(253, 253, 253, 0);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s;
+}
 
-    /* GitHub button specific styles */
-    .github-btn {
+/* Black background for Percentage Required select when focused (both light and dark mode) */
+#percentage:focus {
+  background-color: #908585 !important;
+  color: #fff !important;
+  border-color: #00a8e1;
+}
+
+/* Ensure #percentage:focus remains black in light mode as well */
+body[data-theme="light"] #percentage:focus {
+  background-color: #908585 !important;
+  color: #fff !important;
+}
+
+    .input-container select:focus,
+    .input-container input:focus {
+      outline: none;
+      border-color: #00a8e1;
+      box-shadow: 0 0 0 3px rgba(0, 168, 225, 0.2);
+    }
+    
+    /* Button styles */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .calculate-btn {
+      flex: 1;
+      padding: 12px;
       background: linear-gradient(135deg, #00a8e1, #0077b6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-
-    .github-btn:hover {
+    
+    .calculate-btn:hover {
       background: linear-gradient(135deg, #0077b6, #005a8c);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(0, 168, 225, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 168, 225, 0.4);
     }
-
-/* Green Torrent Button */
-.torrent-btn {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-}
-
-.torrent-btn:hover {
-  background: linear-gradient(135deg, #27ae60, #219653);
-  transform: translateY(-3px);
-  box-shadow: 0 7px 20px rgba(46, 204, 113, 0.4);
-}
-
+    
+    .reset-btn {
+      flex: 1;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .reset-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /* Results section */
+    .results-container {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0, 168, 225, 0.1);
+      border-radius: 8px;
+      border-left: 3px solid #00a8e1;
+    }
+    
+    .results-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #00a8e1;
+      font-weight: 600;
+    }
+    
+    .results-content {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    
+    .results-content strong {
+      color: white;
+      font-weight: 600;
+    }
+    
+    /* GIF container */
+    .gif-container {
+      margin-top: 20px;
+      display: none;
+      justify-content: center;
+    }
+    
+    .attendance-gif {
+      max-width: 300px;
+      width: 100%;
+      border-radius: 10px;
+      user-select: none;
+      pointer-events: none;
+      box-shadow: 0 5px 15px rgba(0, 168, 225, 0.3);
+      border: 2px solid rgba(0, 168, 225, 0.3);
+    }
+    
     /* Footer */
     footer {
       background: linear-gradient(180deg, #0a121b, #070d14);
-      padding: 30px 5%;
+      padding: 20px 5%;
       position: relative;
       overflow: hidden;
       margin-top: auto;
@@ -858,31 +603,31 @@
       margin: 0;
     }
 
-    .footer-content a {
-      color: #00a8e1;
-      text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Telegram Button Styles */
+    .telegram-btn {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 600;
       padding: 10px 20px;
-      border-radius: 30px;
-      background: rgba(0, 168, 225, 0.1);
-      border: 1px solid rgba(0, 168, 225, 0.3);
-      position: relative;
+      color: white;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
       overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, #0088cc, #006699);
     }
 
-    .footer-content a:hover {
-      color: #ffffff;
-      background: rgba(0, 168, 225, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 168, 225, 0.3);
+    .telegram-btn i {
+      margin-right: 8px;
+      transition: all 0.3s ease;
     }
 
-    .footer-content a::before {
+    .telegram-btn::before {
       content: '';
       position: absolute;
       top: 0;
@@ -898,161 +643,93 @@
       transition: 0.5s;
     }
 
-    .footer-content a:hover::before {
+    .telegram-btn:hover::before {
       left: 100%;
     }
 
-    .footer-content a i {
-      transition: transform 0.3s;
-    }
-
-    .footer-content a:hover i {
-      transform: rotate(-30deg);
-    }
-
-    /* Telegram icon pulse effect */
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(0, 168, 225, 0.4);
-      }
-      70% {
-        box-shadow: 0 0 0 10px rgba(0, 168, 225, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(0, 168, 225, 0);
-      }
-    }
-
-    .footer-content a i {
-      animation: pulse 2s infinite;
-    }
-
-    .footer-content a:hover i {
-      animation: none;
-    }
-
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #0a121b;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #00a8e1;
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #007eb9;
+    .telegram-btn:hover {
+      background: linear-gradient(135deg, #006699, #004d73);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(0, 136, 204, 0.4);
     }
 
     /* Light Mode Styles */
     body[data-theme="light"] {
       background-color: white;
-      color: black;
+      color: #333;
     }
 
     body[data-theme="light"] header {
       background: white;
-    }
-
-    body[data-theme="light"] header.scrolled {
-      background-color: white;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    body[data-theme="light"] .doc-card {
-      background: white;
-      border-color: rgba(0,0,0,0.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    body[data-theme="light"] .calculator-section {
+      background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+      border: 1px solid rgba(0, 0, 0, 0.05);
     }
-
-    body[data-theme="light"] .doc-title {
-      color: black;
+    
+    body[data-theme="light"] .calculator-title {
+      color: #333;
     }
-
-    body[data-theme="light"] .doc-meta {
+    
+    body[data-theme="light"] .calculator-description {
       color: rgba(0, 0, 0, 0.7);
     }
-
+    
+    body[data-theme="light"] .input-container select,
+    body[data-theme="light"] .input-container input {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+    
+    body[data-theme="light"] .input-container select:focus,
+    body[data-theme="light"] .input-container input:focus {
+      border-color: #00a8e1;
+    }
+    
+    body[data-theme="light"] .results-container {
+      background: rgba(0, 168, 225, 0.05);
+      border-left: 3px solid #00a8e1;
+    }
+    
+    body[data-theme="light"] .results-content {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    
+    body[data-theme="light"] .results-content strong {
+      color: #333;
+    }
+    
     body[data-theme="light"] footer {
       background: #f5f5f5;
-    }
-
-    body[data-theme="light"] .docs-section h2 {
-      color: black;
     }
 
     body[data-theme="light"] .footer-content p {
       color: rgba(0, 0, 0, 0.7);
     }
 
-    body[data-theme="light"] .footer-content a {
-      color: #00a8e1;
-      background: rgba(0, 168, 225, 0.1);
-      border: 1px solid rgba(0, 168, 225, 0.3);
-    }
-
-    body[data-theme="light"] .footer-content a:hover {
+    /* Light mode buttons */
+    body[data-theme="light"] .calculate-btn {
+      background: linear-gradient(135deg, #d10000, #a00000);
       color: white;
-      background: rgba(0, 168, 225, 0.2);
     }
-
-    body[data-theme="light"] .no-results {
-      color: rgba(0, 0, 0, 0.7);
+    
+    body[data-theme="light"] .calculate-btn:hover {
+      background: linear-gradient(135deg, #a00000, #800000);
     }
-
-    body[data-theme="light"] .download-section {
-      background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-    }
-
-    body[data-theme="light"] .download-description {
-      background: rgba(0, 0, 0, 0.05);
-      border-left: 3px solid #00a8e1;
-    }
-
-    body[data-theme="light"] .download-description p {
-      color: rgba(0, 0, 0, 0.8);
-    }
-
-    body[data-theme="light"] .download-title {
+    
+    body[data-theme="light"] .reset-btn {
+      background: rgba(0, 0, 0, 0.1);
       color: #333;
     }
-
-    body[data-theme="light"] .material-tagline {
-      color: rgba(0, 0, 0, 0.8);
-    }
-
-    /* Update scrollbar for light mode */
-    body[data-theme="light"] ::-webkit-scrollbar-track {
-      background: #f1f2f6;
-    }
-
-    body[data-theme="light"] ::-webkit-scrollbar-thumb {
-      background: #00a8e1;
+    
+    body[data-theme="light"] .reset-btn:hover {
+      background: rgba(0, 0, 0, 0.2);
     }
 
     /* Responsive adjustments */
-    @media (max-width: 992px) {
-      .content-grid {
-        flex-direction: column;
-      }
-      
-      .poster-container {
-        width: 100%;
-        max-width: 280px;
-        margin: 0 auto 25px;
-      }
-      
-      .download-buttons {
-        flex-direction: column;
-        gap: 15px;
-      }
-    }
-
     @media (max-width: 768px) {
       .menu-toggle {
         display: block;
@@ -1063,125 +740,92 @@
       }
 
       header {
-        flex-wrap: wrap;
+        padding: 10px 5%;
       }
 
-      .docs-container {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 15px;
+      .calculator-section {
+        padding: 20px;
       }
       
-      .doc-thumbnail {
-        height: 220px;
+      .button-group {
+        flex-direction: column;
       }
-
+      
       .footer-content {
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
         text-align: center;
       }
       
-      .footer-content a {
-        padding: 8px 16px;
-      }
-
-      /* Adjust theme toggle for mobile */
-      .theme-toggle {
-        margin-left: auto;
+      .telegram-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
 
     @media (max-width: 480px) {
-      .docs-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      .calculator-section {
+        padding: 15px;
       }
       
-      .download-btn {
-        padding: 12px 20px;
+      .calculator-title {
+        font-size: 20px;
+      }
+      
+      .logo h1 {
+        font-size: 20px;
+      }
+      
+      .input-container select,
+      .input-container input {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+      
+      .calculate-btn,
+      .reset-btn {
+        padding: 10px;
+        font-size: 14px;
+      }
+      
+      .results-container {
+        padding: 12px;
+      }
+      
+      .results-title {
         font-size: 15px;
       }
-
-    /* Add this new style to your existing styles */
-    .like-container {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
+      
+      .results-content {
+        font-size: 13px;
+      }
+      
+      .attendance-gif {
+        max-width: 250px;
+      }
     }
-    
-    .like-btn {
-      background: none;
-      border: none;
-      color: #00a8e1;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      transition: all 0.3s;
-      padding: 5px;
-      border-radius: 20px;
-    }
-    
-    .like-btn:hover {
-      background: rgba(0, 168, 225, 0.1);
-      transform: scale(1.1);
-    }
-    
-    .like-btn i {
-      margin-right: 5px;
-    }
-    
-    .like-count {
-      color: rgba(255,255,255,0.7);
-      font-size: 14px;
-      margin-left: 5px;
-    }
-    
-    body[data-theme="light"] .like-count {
-      color: rgba(0, 0, 0, 0.7);
-    }
-    
-    /* Animation for like button */
-    @keyframes heartBeat {
-      0% { transform: scale(1); }
-      25% { transform: scale(1.2); }
-      50% { transform: scale(1); }
-      75% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-    
-    .liked {
-      animation: heartBeat 0.5s;
-      color: #ff4081;
-    }
-
-
-    }
-
-
   </style>
 </head>
-<body>
 
+<body>
   <header id="main-header">
     <div class="logo">
       <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
       </button>
-      <h1>AADS</h1>
+      <h1>KLU Attendance</h1>
     </div>
     <nav id="desktop-nav">
       <ul>
-     <li><a href="" >HOME</a></li>
-       <li><a href="" >BRANCHES</a></li>
-        <li><a href="" >CSE</a></li>
-         <li><a href="" >AI&DS</a></li>
+        <li><a href="#" >Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
       </ul>
     </nav>
     <button class="theme-toggle" id="theme-toggle">
       <i class="bi bi-sun"></i>
       <i class="bi bi-moon" style="display: none;"></i>
     </button>
-
   </header>
 
   <!-- Mobile Menu -->
@@ -1192,232 +836,250 @@
     </button>
     <nav>
       <ul>
-        <li><a href="" >HOME</a></li>
-       <li><a href="" >BRANCHES</a></li>
-        <li><a href=""  >CSE</a></li>
-         <li><a href="" >AI&DS</a></li>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
       </ul>
     </nav>
   </div>
 
   <div class="main-content">
-    <!-- Enhanced Download Section -->
-    <section class="download-section">
-      <div class="content-grid">
-        <!-- Simplified Poster Container -->
-        <div class="poster-container">
-          <div class="poster-image">
-            <img src="https://raw.githubusercontent.com/studentsofklu/sok/main/exp/EXP1.jpg" alt="LAB 1 Image">
-          </div>
-        </div>
-        
-        <!-- Download options with enhanced UI -->
-        <div class="download-options">
-          <div class="download-header">
-            <div class="title-wrapper">
-              <h1 class="page-title">AADS WORKBOOK</h1>
-            </div>
-            <p class="material-tagline">EXP 1 ANSWERS</p>
-          </div>
-    
-          <!-- PDF Size Indicator -->
-          <div class="file-size">
-            <i class="fas fa-file-pdf"></i>
-            <span>File Size: 473 KB (PDF)</span>
-          </div>
-          
-          <div class="download-actions">
-            <h3 class="download-title"><i class="fas fa-cloud-download-alt"></i> Download Options</h3>
-            
-<div class="download-buttons">
-  <a href="https://drive.google.com/file/d/18IjLugmpVgVeyA2V3dwcLTA4Y6WnXo1H/view?usp=sharing" class="download-btn drive-btn">
-    <i class="fab fa-google-drive"></i> Google Drive
-  </a>
+    <section class="calculator-section">
+      <div class="calculator-header">
+        <h2 class="calculator-title">Attendance Calculator</h2>
+        <p class="calculator-description">Calculate how many classes you need to attend or can bunk</p>
+      </div>
+      
+      <div class="input-container">
+        <label for="percentage">Percentage Required</label>
+        <select name="percentage" id="percentage">
 
-  <a href="https://github.com/DEADPOOL0006/sokfiles/blob/main/ADVANCED%20ALGORITHMS%20%26%20DATA%20STRUCTURES/AADS%20LAB%20WORKBOOK%20ANSWERS/C%20CODE/AADS%20EXP%20-%201%20WORKBOOK%20ANSWER%20In%20C%20_SOK_.pdf" class="download-btn github-btn">
-    <i class="fab fa-github"></i> GitHub
-  </a>
-</div>
+          <option value="70">70%</option>
+          <option value="75">75%</option>
+          <option value="80">80%</option>
+          <option value="85" selected>85%</option>
+          <option value="90">90%</option>
+        </select>
+      </div>
 
+      <div class="input-container">
+        <label for="present-input">Present Classes</label>
+        <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
+      </div>
 
-          </div>
-        </div>
+      <div class="input-container">
+        <label for="total-input">Total Classes</label>
+        <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
+      </div>
+
+      <div class="button-group">
+        <button id="btn" class="calculate-btn">
+          <i class="fas fa-calculator"></i> Calculate
+        </button>
+        <button id="reset-btn" class="reset-btn">
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+
+      <div class="results-container">
+        <div class="results-title">Results</div>
+        <div id="output-div" class="results-content"></div>
+      </div>
+
+      <div id="gif-container" class="gif-container">
+        <img id="attendance-gif" class="attendance-gif" src="https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif"
+          alt="Safe Attendance GIF" />
       </div>
     </section>
-    
+  </div>
+
   <footer>
     <div class="footer-content">
-      <p>&copy; 2025 Students of KLU. All rights reserved.</p>
-      <p><a href="https://t.me/students_of_klu" target="_blank"><i class="fab fa-telegram-plane"></i> Join us on Telegram</a></p>
+      <p>&copy; 2025 KLU Attendance Calculator. All rights reserved.</p>
+      <a href="https://t.me/students_of_klu" target="_blank" class="telegram-btn">
+        <i class="fab fa-telegram-plane"></i> Join Telegram
+      </a>
     </div>
   </footer>
 
   <script>
-
-// Disable right-click
-document.addEventListener('contextmenu', function (e) {
-  e.preventDefault();
-});
-
-// Disable keyboard shortcuts
-document.addEventListener('keydown', function (e) {
-  const key = e.key.toLowerCase();
-
-  if (
-    e.keyCode === 123 || // F12
-    (e.ctrlKey && e.shiftKey && key === 'i') || // Ctrl+Shift+I
-    (e.ctrlKey && key === 'u') || // Ctrl+U
-    (e.ctrlKey && key === 's') || // Ctrl+S
-    (e.ctrlKey && key === 'c')    // Ctrl+C
-  ) {
-    e.preventDefault();
-  }
-});
-
-// Disable dragstart (image/text drag)
-document.addEventListener('dragstart', function (e) {
-  e.preventDefault();
-});
-
-// Disable text selection (double tap / long press drag)
-document.addEventListener('selectstart', function (e) {
-  e.preventDefault();
-});
-
-// Disable iframe view
-if (window.top !== window.self) {
-  window.top.location = window.self.location;
-}
-
-// DevTools detection via console.log trick
-(function () {
-  const element = new Image();
-  Object.defineProperty(element, 'id', {
-    get: function () {
-      showBlockMessage();
-    }
-  });
-  setInterval(function () {
-    console.log(element);
-  }, 1000);
-})();
-
-// DevTools detection via size difference
-(function () {
-  const threshold = 160;
-  setInterval(() => {
-    const widthExceeded = window.outerWidth - window.innerWidth > threshold;
-    const heightExceeded = window.outerHeight - window.innerHeight > threshold;
-
-    if (widthExceeded || heightExceeded) {
-      showBlockMessage();
-    }
-  }, 1000);
-})();
-
-// Disable long-press (on links and entire page)
-let touchTimer = null;
-document.addEventListener('touchstart', function (e) {
-  touchTimer = setTimeout(() => {
-    e.preventDefault(); // Block long-press on any element
-  }, 500); // 500ms = long-press threshold
-}, { passive: false });
-
-document.addEventListener('touchend', function () {
-  clearTimeout(touchTimer);
-});
-
-// Also disable context menu for long-press links
-document.querySelectorAll('a').forEach(link => {
-  link.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-  });
-});
-
-// Display block message with GIF
-function showBlockMessage() {
-  document.body.innerHTML = `
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: black; color: white;">
-      <h1 style="font-size: 3rem;">Enduku ?</h1>
-      <img src="https://media1.tenor.com/m/J8YuZ9x6Q_kAAAAC/athadu-telugu.gif" alt="Enduku GIF" style="max-width: 100%; height: auto; margin-top: 20px;" />
-    </div>
-  `;
-}
-    
-    // Mobile menu functionality
+    // DOM Elements
+    const percentageSelect = document.getElementById("percentage");
+    const presentInput = document.getElementById("present-input");
+    const totalInput = document.getElementById("total-input");
+    const btn = document.getElementById("btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const outputDiv = document.getElementById("output-div");
+    const gifContainer = document.getElementById("gif-container");
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
     const closeMenu = document.getElementById('close-menu');
-    const body = document.body;
 
+    // Initialize GIF container as hidden
+    window.addEventListener('load', () => {
+      gifContainer.style.display = 'none';
+    });
+
+    // Mobile menu functionality
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.add('active');
       mobileMenuBackdrop.style.display = 'block';
-      body.classList.add('menu-open');
+      document.body.classList.add('menu-open');
     });
 
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.remove('active');
       mobileMenuBackdrop.style.display = 'none';
-      body.classList.remove('menu-open');
+      document.body.classList.remove('menu-open');
     });
 
     mobileMenuBackdrop.addEventListener('click', () => {
       mobileMenu.classList.remove('active');
       mobileMenuBackdrop.style.display = 'none';
-      body.classList.remove('menu-open');
+      document.body.classList.remove('menu-open');
     });
 
-    // Optimized scroll handler with throttling
-    function throttle(func, limit) {
-      let lastFunc;
-      let lastRan;
-      return function() {
-        const context = this;
-        const args = arguments;
-        if (!lastRan) {
-          func.apply(context, args);
-          lastRan = Date.now();
-        } else {
-          clearTimeout(lastFunc);
-          lastFunc = setTimeout(function() {
-            if ((Date.now() - lastRan) >= limit) {
-              func.apply(context, args);
-              lastRan = Date.now();
-            }
-          }, limit - (Date.now() - lastRan));
-        }
-      }
-    }
+    // Calculate button click handler
+    btn.addEventListener("click", () => {
+      let present = parseInt(presentInput.value);
+      let total = parseInt(totalInput.value);
+      let percentage = parseInt(percentageSelect.value);
 
-    const handleScroll = throttle(function() {
-      const header = document.getElementById('main-header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
+      // Hide GIF initially
+      gifContainer.style.display = "none";
+
+      // Validate inputs
+      if (isNaN(present)) {
+        presentInput.focus();
+        outputDiv.innerHTML = "Please enter your present classes";
+        return;
+      }
+
+      if (isNaN(total)) {
+        totalInput.focus();
+        outputDiv.innerHTML = "Please enter total classes held";
+        return;
+      }
+
+      if (present < 0 || total <= 0 || present > total) {
+        outputDiv.innerHTML = "Invalid values! Present can't be more than total or negative";
+        return;
+      }
+
+      // Calculate current attendance percentage
+      const currentAttendance = (present / total) * 100;
+
+      // Show appropriate GIF based on attendance percentage
+      if (currentAttendance === 100) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
+      } else if (currentAttendance >= 90 && currentAttendance < 100) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
+      } else if (currentAttendance === 85) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
+      } else if (currentAttendance >= 86 && currentAttendance <= 89) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
+      } else if (currentAttendance >= 80 && currentAttendance < 85) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
+      } else if (currentAttendance >= 75 && currentAttendance <= 79) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
+      } else if (currentAttendance >= 70 && currentAttendance <= 74) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/pbFS8uGfeIIAAAAC/troop-originals-telugu-memes.gif";
+      } else if (currentAttendance >= 60 && currentAttendance <= 69) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
+      } else if (currentAttendance >= 30 && currentAttendance <= 59) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
+      } else if (currentAttendance < 30) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
       } else {
-        header.classList.remove('scrolled');
+        gifContainer.style.display = "none";
       }
-    }, 16); // ~60fps
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+      // Determine if user can bunk or needs to attend more classes
+      if (currentAttendance >= percentage) {
+        const daysAvailableToBunk = daysToBunk(present, total, percentage);
+        outputDiv.innerHTML = daysToBunkText(
+          daysAvailableToBunk,
+          present,
+          total
+        );
+      } else {
+        const attendanceNeeded = reqAttendance(present, total, percentage);
+        outputDiv.innerHTML = daysToAttendClassText(
+          attendanceNeeded,
+          present,
+          total,
+          percentage
+        );
+      }
+    });
+
+    // Reset button click handler
+    resetBtn.addEventListener("click", () => {
+      presentInput.value = "";
+      totalInput.value = "";
+      percentageSelect.value = "75";
+      outputDiv.innerHTML = "";
+      gifContainer.style.display = "none";
+    });
+
+    // Calculate required attendance to reach target percentage
+    const reqAttendance = (present, total, percentage) => {
+      return Math.ceil((percentage * total - 100 * present) / (100 - percentage));
+    };
+
+    // Calculate how many days can be bunked while maintaining target percentage
+    const daysToBunk = (present, total, percentage) => {
+      return Math.floor((100 * present - percentage * total) / percentage);
+    };
+
+    // Generate text for bunkable days
+    const daysToBunkText = (daysAvailableToBunk, present, total) =>
+      `You can bunk for <strong>${daysAvailableToBunk}</strong> more classes.<br><br>
+      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+      <strong>After Bunking:</strong> ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`;
+
+    // Generate text for required attendance
+    const daysToAttendClassText = (attendanceNeeded, present, total, percentage) =>
+      `You need to attend <strong>${attendanceNeeded}</strong> more classes to reach ${percentage}%<br><br>
+      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+      <strong>Required Attendance:</strong> ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`;
 
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('theme-toggle');
     const sunIcon = themeToggle.querySelector('.bi-sun');
     const moonIcon = themeToggle.querySelector('.bi-moon');
     
+    // Toggle between light and dark theme
     function toggleTheme() {
       if (document.body.getAttribute('data-theme') === 'light') {
         document.body.removeAttribute('data-theme');
         sunIcon.style.display = 'block';
         moonIcon.style.display = 'none';
-        document.querySelector('.menu-toggle').style.color = 'white';
       } else {
         document.body.setAttribute('data-theme', 'light');
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'block';
-        document.querySelector('.menu-toggle').style.color = 'black';
       }
       localStorage.setItem('theme', document.body.getAttribute('data-theme'));
     }
@@ -1428,73 +1090,30 @@ function showBlockMessage() {
       document.body.setAttribute('data-theme', 'light');
       sunIcon.style.display = 'none';
       moonIcon.style.display = 'block';
-      document.querySelector('.menu-toggle').style.color = 'black';
     } else {
       sunIcon.style.display = 'block';
       moonIcon.style.display = 'none';
-      document.querySelector('.menu-toggle').style.color = 'white';
     }
 
+    // Add event listener for theme toggle
     themeToggle.addEventListener('click', toggleTheme);
 
-    // Initialize - hide no results messages by default
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.no-results').forEach(el => {
-        el.style.display = 'none';
-      });
-
-      // Make sure content takes up at least the full viewport height minus the footer height
-      function adjustMainContentHeight() {
-        const footerHeight = document.querySelector('footer').offsetHeight;
-        const headerHeight = document.querySelector('header').offsetHeight;
-        const windowHeight = window.innerHeight;
-        const mainContent = document.querySelector('.main-content');
-        const minHeight = windowHeight - footerHeight - headerHeight;
-        mainContent.style.minHeight = `${minHeight}px`;
+    // Make the Enter key trigger calculation
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        btn.click();
       }
-      
-      // Run on load and on resize
-      adjustMainContentHeight();
-      window.addEventListener('resize', adjustMainContentHeight);
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('main-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
     });
   </script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
 </body>
-</html> 
+</html>
