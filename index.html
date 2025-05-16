@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KLU Attendance Calculator</title>
+  <title>SOK Attendance Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <!-- Add Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <style>
 * {
   margin: 0;
@@ -523,6 +526,38 @@ body[data-theme="light"] #percentage:focus {
   transform: translateY(-2px);
 }
 
+.pdf-btn {
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff5f5f, #d10000);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pdf-btn:hover {
+  background: linear-gradient(135deg, #d10000, #a00000);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 95, 95, 0.4);
+}
+
+body[data-theme="light"] .pdf-btn {
+  background: linear-gradient(135deg, #ff5f5f, #d10000);
+  color: white;
+}
+
+body[data-theme="light"] .pdf-btn:hover {
+  background: linear-gradient(135deg, #d10000, #a00000);
+}
+
 /* Results section - Updated for larger size */
 .results-container {
   margin-top: 30px; /* Increased from 20px */
@@ -784,12 +819,15 @@ body[data-theme="light"] .reset-btn:hover {
   .button-group {
     gap: 15px;
     margin-top: 20px;
+    flex-direction: column;
   }
   
   .calculate-btn,
-  .reset-btn {
+  .reset-btn,
+  .pdf-btn {
     padding: 12px;
     font-size: 16px;
+    width: 100%;
   }
   
   .results-container {
@@ -856,7 +894,8 @@ body[data-theme="light"] .reset-btn:hover {
   }
   
   .calculate-btn,
-  .reset-btn {
+  .reset-btn,
+  .pdf-btn {
     padding: 10px;
     font-size: 14px;
   }
@@ -880,9 +919,7 @@ body[data-theme="light"] .reset-btn:hover {
     min-height: 200px;
   }
 }
-
-  </style>
-
+</style>
 </head>
 
 <body>
@@ -891,7 +928,7 @@ body[data-theme="light"] .reset-btn:hover {
       <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
       </button>
-      <h1>KLU Attendance</h1>
+      <h1>SOK Attendance Calculator</h1>
     </div>
     <nav id="desktop-nav">
       <ul>
@@ -931,7 +968,6 @@ body[data-theme="light"] .reset-btn:hover {
       <div class="input-container">
         <label for="percentage">Percentage Required</label>
         <select name="percentage" id="percentage">
-
           <option value="70">70%</option>
           <option value="75">75%</option>
           <option value="80">80%</option>
@@ -945,7 +981,7 @@ body[data-theme="light"] .reset-btn:hover {
         <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
       </div>
 
-            <div class="input-container">
+      <div class="input-container">
         <label for="present-input">Present Classes</label>
         <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
       </div>
@@ -957,6 +993,9 @@ body[data-theme="light"] .reset-btn:hover {
         <button id="reset-btn" class="reset-btn">
           <i class="fas fa-redo"></i> Reset
         </button>
+        <button id="pdf-btn" class="pdf-btn">
+          <i class="fas fa-file-pdf"></i> Generate PDF
+        </button>
       </div>
 
       <div class="results-container">
@@ -965,7 +1004,7 @@ body[data-theme="light"] .reset-btn:hover {
       </div>
 
       <div id="gif-container" class="gif-container">
-        <img id="attendance-gif" class="attendance-gif" src="https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif"
+        <img id="attendance-gif" class="attendance-gif" src="https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-s-prabhas.gif"
           alt="Safe Attendance GIF" />
       </div>
     </section>
@@ -981,16 +1020,103 @@ body[data-theme="light"] .reset-btn:hover {
   </footer>
 
   <script>
+// Disable right-click
+document.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+});
 
+// Disable keyboard shortcuts
+document.addEventListener('keydown', function (e) {
+  const key = e.key.toLowerCase();
 
+  if (
+    e.keyCode === 123 || // F12
+    (e.ctrlKey && e.shiftKey && key === 'i') || // Ctrl+Shift+I
+    (e.ctrlKey && key === 'u') || // Ctrl+U
+    (e.ctrlKey && key === 's') || // Ctrl+S
+    (e.ctrlKey && key === 'c')    // Ctrl+C
+  ) {
+    e.preventDefault();
+  }
+});
 
-    
+// Disable dragstart (image/text drag)
+document.addEventListener('dragstart', function (e) {
+  e.preventDefault();
+});
+
+// Disable text selection (double tap / long press drag)
+document.addEventListener('selectstart', function (e) {
+  e.preventDefault();
+});
+
+// Disable iframe view
+if (window.top !== window.self) {
+  window.top.location = window.self.location;
+}
+
+// DevTools detection via console.log trick
+(function () {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function () {
+      showBlockMessage();
+    }
+  });
+  setInterval(function () {
+    console.log(element);
+  }, 1000);
+})();
+
+// DevTools detection via size difference
+(function () {
+  const threshold = 160;
+  setInterval(() => {
+    const widthExceeded = window.outerWidth - window.innerWidth > threshold;
+    const heightExceeded = window.outerHeight - window.innerHeight > threshold;
+
+    if (widthExceeded || heightExceeded) {
+      showBlockMessage();
+    }
+  }, 1000);
+})();
+
+// Disable long-press (on links and entire page)
+let touchTimer = null;
+document.addEventListener('touchstart', function (e) {
+  touchTimer = setTimeout(() => {
+    e.preventDefault(); // Block long-press on any element
+  }, 500); // 500ms = long-press threshold
+}, { passive: false });
+
+document.addEventListener('touchend', function () {
+  clearTimeout(touchTimer);
+});
+
+// Also disable context menu for long-press links
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+});
+
+// Display block message with GIF
+function showBlockMessage() {
+  document.body.innerHTML = `
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: black; color: white;">
+      <h1 style="font-size: 3rem;">Enduku ?</h1>
+      <img src="https://media1.tenor.com/m/J8YuZ9x6Q_kAAAAC/athadu-telugu.gif" alt="Enduku GIF" style="max-width: 100%; height: auto; margin-top: 20px;" />
+    </div>
+  `;
+}
+
     // DOM Elements
     const percentageSelect = document.getElementById("percentage");
     const presentInput = document.getElementById("present-input");
     const totalInput = document.getElementById("total-input");
     const btn = document.getElementById("btn");
     const resetBtn = document.getElementById("reset-btn");
+    const pdfBtn = document.getElementById("pdf-btn");
     const outputDiv = document.getElementById("output-div");
     const gifContainer = document.getElementById("gif-container");
     const menuToggle = document.getElementById('menu-toggle');
@@ -1021,6 +1147,30 @@ body[data-theme="light"] .reset-btn:hover {
       mobileMenuBackdrop.style.display = 'none';
       document.body.classList.remove('menu-open');
     });
+
+    // Calculate required attendance to reach target percentage
+    function reqAttendance(present, total, percentage) {
+      return Math.ceil((percentage * total - 100 * present) / (100 - percentage));
+    }
+
+    // Calculate how many days can be bunked while maintaining target percentage
+    function daysToBunk(present, total, percentage) {
+      return Math.floor((100 * present - percentage * total) / percentage);
+    }
+
+    // Generate text for bunkable days
+    function daysToBunkText(daysAvailableToBunk, present, total) {
+      return `You can bunk for <strong>${daysAvailableToBunk}</strong> more classes.<br><br>
+      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+      <strong>After Bunking:</strong> ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`;
+    }
+
+    // Generate text for required attendance
+    function daysToAttendClassText(attendanceNeeded, present, total, percentage) {
+      return `You need to attend <strong>${attendanceNeeded}</strong> more classes to reach ${percentage}%<br><br>
+      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+      <strong>Required Attendance:</strong> ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`;
+    }
 
     // Calculate button click handler
     btn.addEventListener("click", () => {
@@ -1053,54 +1203,53 @@ body[data-theme="light"] .reset-btn:hover {
       const currentAttendance = (present / total) * 100;
 
       // Show appropriate GIF based on attendance percentage
-if (currentAttendance === 100) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
-} else if (currentAttendance >= 90 && currentAttendance < 100) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
-} else if (currentAttendance === 85) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
-} else if (currentAttendance >= 86 && currentAttendance <= 89) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
-} else if (currentAttendance >= 80 && currentAttendance <= 84) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
-} else if (currentAttendance === 75) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
-} else if (currentAttendance >= 76 && currentAttendance <= 79) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
-} else if (currentAttendance >= 70 && currentAttendance <= 74) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/wr8kJmGOJo4AAAAC/king-srihari.gif";
-} else if (currentAttendance >= 60 && currentAttendance <= 69) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
-} else if (currentAttendance >= 30 && currentAttendance <= 59) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
-} else if (currentAttendance < 30) {
-  gifContainer.style.display = "flex";
-  document.getElementById("attendance-gif").src =
-    "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
-} else {
-  gifContainer.style.display = "none";
-}
-
+      if (currentAttendance === 100) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
+      } else if (currentAttendance >= 90 && currentAttendance < 100) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
+      } else if (currentAttendance === 85) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
+      } else if (currentAttendance >= 86 && currentAttendance <= 89) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
+      } else if (currentAttendance >= 80 && currentAttendance <= 84) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
+      } else if (currentAttendance === 75) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
+      } else if (currentAttendance >= 76 && currentAttendance <= 79) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
+      } else if (currentAttendance >= 70 && currentAttendance <= 74) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/wr8kJmGOJo4AAAAC/king-srihari.gif";
+      } else if (currentAttendance >= 60 && currentAttendance <= 69) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
+      } else if (currentAttendance >= 30 && currentAttendance <= 59) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
+      } else if (currentAttendance < 30) {
+        gifContainer.style.display = "flex";
+        document.getElementById("attendance-gif").src =
+          "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
+      } else {
+        gifContainer.style.display = "none";
+      }
 
       // Determine if user can bunk or needs to attend more classes
       if (currentAttendance >= percentage) {
@@ -1125,32 +1274,95 @@ if (currentAttendance === 100) {
     resetBtn.addEventListener("click", () => {
       presentInput.value = "";
       totalInput.value = "";
-      percentageSelect.value = "75";
+      percentageSelect.value = "85";
       outputDiv.innerHTML = "";
       gifContainer.style.display = "none";
     });
 
-    // Calculate required attendance to reach target percentage
-    const reqAttendance = (present, total, percentage) => {
-      return Math.ceil((percentage * total - 100 * present) / (100 - percentage));
-    };
+    // PDF Generation function
+    function generatePDF() {
+      // Check if there are any results to export
+      if (!outputDiv.textContent.trim()) {
+        outputDiv.innerHTML = "Please calculate attendance first before generating PDF";
+        return;
+      }
 
-    // Calculate how many days can be bunked while maintaining target percentage
-    const daysToBunk = (present, total, percentage) => {
-      return Math.floor((100 * present - percentage * total) / percentage);
-    };
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-    // Generate text for bunkable days
-    const daysToBunkText = (daysAvailableToBunk, present, total) =>
-      `You can bunk for <strong>${daysAvailableToBunk}</strong> more classes.<br><br>
-      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
-      <strong>After Bunking:</strong> ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`;
+      // Get current values
+      const present = parseInt(presentInput.value) || 0;
+      const total = parseInt(totalInput.value) || 0;
+      const percentage = parseInt(percentageSelect.value) || 85;
+      const currentAttendance = total > 0 ? (present / total) * 100 : 0;
 
-    // Generate text for required attendance
-    const daysToAttendClassText = (attendanceNeeded, present, total, percentage) =>
-      `You need to attend <strong>${attendanceNeeded}</strong> more classes to reach ${percentage}%<br><br>
-      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
-      <strong>Required Attendance:</strong> ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`;
+      // Add KLU logo or header
+      doc.setFontSize(20);
+      doc.setTextColor(0, 168, 225);
+      doc.text("SOK Attendance Report", 105, 15, null, null, 'center');
+      
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, null, null, 'center');
+
+      // Add a line
+      doc.setDrawColor(0, 168, 225);
+      doc.setLineWidth(0.5);
+      doc.line(20, 30, 190, 30);
+
+      // Create the data for the table
+      const data = [
+        ["Parameter", "Value"],
+        ["Percentage Required", `${percentage}%`],
+        ["Total Classes", total],
+        ["Present Classes", present],
+        ["Current Attendance", `${currentAttendance.toFixed(2)}%`],
+        ["Status", currentAttendance >= percentage ? "Safe" : "Attention Needed"]
+      ];
+
+      // Add the table
+      doc.autoTable({
+        startY: 40,
+        head: [data[0]],
+        body: data.slice(1),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [0, 168, 225],
+          textColor: [255, 255, 255]
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240]
+        }
+      });
+
+      // Add detailed results
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      
+      let startY = doc.lastAutoTable.finalY + 15;
+      
+      if (currentAttendance >= percentage) {
+        const daysAvailableToBunk = daysToBunk(present, total, percentage);
+        doc.text(`You can bunk for ${daysAvailableToBunk} more classes.`, 20, startY);
+        doc.text(`After bunking: ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
+      } else {
+        const attendanceNeeded = reqAttendance(present, total, percentage);
+        doc.text(`You need to attend ${attendanceNeeded} more classes to reach ${percentage}%.`, 20, startY);
+        doc.text(`Required attendance: ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
+      }
+
+      // Add footer
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Generated by SOK Attendance Calculator", 105, 285, null, null, 'center');
+      doc.text("https://your-website.com", 105, 290, null, null, 'center');
+
+      // Save the PDF
+      doc.save(`SOK_Attendance_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+    }
+
+    // PDF button click handler
+    pdfBtn.addEventListener("click", generatePDF);
 
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('theme-toggle');
