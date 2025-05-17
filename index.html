@@ -1620,7 +1620,6 @@ function calculateBunkAttendance() {
   let total = parseInt(totalInput.value);
   let percentage = parseInt(percentageSelect.value);
 
-  // Hide GIF initially
   gifContainer.style.display = "none";
   resultsContainer.style.display = "none";
 
@@ -1628,24 +1627,30 @@ function calculateBunkAttendance() {
   if (isNaN(present)) {
     presentInput.focus();
     outputDiv.innerHTML = "Please enter your present classes";
+    resultsContainer.style.display = 'block'; // <-- ADD THIS
     return;
   }
 
   if (isNaN(total)) {
     totalInput.focus();
     outputDiv.innerHTML = "Please enter total classes held";
+    resultsContainer.style.display = 'block'; // <-- ADD THIS
     return;
   }
 
   if (present < 0 || total <= 0) {
     outputDiv.innerHTML = "Invalid values! Please enter positive numbers.";
+    resultsContainer.style.display = 'block'; // <-- ADD THIS
     return;
   }
 
   if (present > total) {
     outputDiv.innerHTML = "Invalid input: <strong>Present Classes</strong> cannot be more than <strong>Total Classes</strong>.";
+    resultsContainer.style.display = 'block'; // <-- ADD THIS
     return;
   }
+
+  // ... rest of your code ...
 
   // Calculate current attendance percentage
   const currentAttendance = (present / total) * 100;
