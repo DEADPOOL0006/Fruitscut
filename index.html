@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SOK Attendance Calculator</title>
+  <title>Attendance Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <!-- Add Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -302,7 +302,7 @@ body[data-theme="light"] .mobile-menu nav ul li a {
 
 body[data-theme="light"] .mobile-menu nav ul li a:hover,
 body[data-theme="light"] .mobile-menu nav ul li a.active {
-  color: yellow;
+  color: black;
   border: 2px solid rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 10px;
@@ -427,6 +427,45 @@ body[data-theme="light"] .bi-moon {
   color: rgba(255, 255, 255, 0.7);
   font-size: 15px; /* Increased from 14px */
   margin-top: 12px; /* Increased from 10px */
+}
+
+/* Calculator type toggle */
+.calculator-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: rgba(0, 168, 225, 0.1);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: white; /* default for dark mode */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 5px;
+}
+
+body[data-theme="light"] .toggle-btn {
+  color: black;
+}
+
+.toggle-btn.active {
+  background: rgba(0, 168, 225, 0.3);
+  color: #00a8e1;
+}
+
+.toggle-btn:first-child {
+  margin-right: 5px;
+}
+
+.toggle-btn:last-child {
+  margin-left: 5px;
 }
 
 /* Input fields - Updated for larger size */
@@ -586,6 +625,105 @@ body[data-theme="light"] .pdf-btn:hover {
   font-size: 17px; /* Slightly larger than regular text */
 }
 
+/* Circular progress indicator */
+.progress-container {
+  width: 200px;
+  height: 200px;
+  margin: 20px auto;
+  position: relative;
+  display: none; /* Hidden by default, shown for LPTS calculator */
+}
+.progress-circle {
+  transform: rotate(-90deg);
+}
+
+.progress-background {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 8;
+}
+
+.progress-bar {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+}
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+}
+
+.progress-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
+}
+
+/* Component cards grid */
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 25px;
+  display: none; /* Hidden by default, shown for LPTS calculator */
+}
+
+.component-card {
+  background: rgba(0, 168, 225, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid rgba(0, 168, 225, 0.2);
+  transition: all 0.3s ease;
+}
+
+.component-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 168, 225, 0.2);
+}
+
+.component-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.component-name {
+  font-weight: bold;
+  color: #00a8e1;
+  font-size: 16px;
+}
+
+.component-weight {
+  background: rgba(0, 168, 225, 0.2);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.component-percentage {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.component-percentage.na {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+}
+
 /* GIF container - Updated for mobile responsiveness */
 .gif-container {
   margin-top: 25px; /* Increased from 20px */
@@ -594,7 +732,7 @@ body[data-theme="light"] .pdf-btn:hover {
 }
 
 .attendance-gif {
-  max-width: 450px; /* Increased from 300px */
+  max-width: 350px; /* Increased from 300px */
   width: 100%;
   border-radius: 10px;
   user-select: none;
@@ -740,6 +878,32 @@ body[data-theme="light"] .results-content strong {
   font-size: 17px;
 }
 
+body[data-theme="light"] .progress-background {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .progress-value {
+  color: #333;
+}
+
+body[data-theme="light"] .progress-label {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+body[data-theme="light"] .component-card {
+  background: rgba(0, 168, 225, 0.05);
+  border: 1px solid rgba(0, 168, 225, 0.1);
+}
+
+body[data-theme="light"] .component-name {
+  color: #0077b6;
+}
+
+body[data-theme="light"] .component-weight {
+  background: rgba(0, 168, 225, 0.1);
+  color: #333;
+}
+
 body[data-theme="light"] footer {
   background: #f5f5f5;
 }
@@ -750,12 +914,12 @@ body[data-theme="light"] .footer-content p {
 
 /* Light mode buttons */
 body[data-theme="light"] .calculate-btn {
-  background: linear-gradient(135deg, #d10000, #a00000);
+  background: linear-gradient(135deg, #00a8e1, #0077b6);
   color: white;
 }
 
 body[data-theme="light"] .calculate-btn:hover {
-  background: linear-gradient(135deg, #a00000, #800000);
+  background: linear-gradient(135deg, #0077b6, #005a8c);
 }
 
 body[data-theme="light"] .reset-btn {
@@ -765,6 +929,15 @@ body[data-theme="light"] .reset-btn {
 
 body[data-theme="light"] .reset-btn:hover {
   background: rgba(0, 0, 0, 0.2);
+}
+
+/* Calculator type specific styles */
+.bunk-calculator {
+  display: block;
+}
+
+.lpts-calculator {
+  display: none;
 }
 
 /* Responsive adjustments */
@@ -841,6 +1014,10 @@ body[data-theme="light"] .reset-btn:hover {
   
   .results-content {
     font-size: 14px;
+  }
+  
+  .components-grid {
+    grid-template-columns: 1fr;
   }
   
   /* Updated GIF styles for tablet/mobile */
@@ -928,11 +1105,11 @@ body[data-theme="light"] .reset-btn:hover {
       <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
       </button>
-      <h1>SOK Attendance Calculator</h1>
+      <h1>Attendance Calculator</h1>
     </div>
     <nav id="desktop-nav">
       <ul>
-        <li><a href="#" >Home</a></li>
+        <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
@@ -962,28 +1139,59 @@ body[data-theme="light"] .reset-btn:hover {
     <section class="calculator-section">
       <div class="calculator-header">
         <h2 class="calculator-title">Attendance Calculator</h2>
-        <p class="calculator-description">Calculate how many classes you need to attend or can bunk</p>
+        <p class="calculator-description">Choose calculator type below</p>
       </div>
       
-      <div class="input-container">
-        <label for="percentage">Percentage Required</label>
-        <select name="percentage" id="percentage">
-          <option value="70">70%</option>
-          <option value="75">75%</option>
-          <option value="80">80%</option>
-          <option value="85" selected>85%</option>
-          <option value="90">90%</option>
-        </select>
+      <div class="calculator-toggle">
+        <button id="bunk-toggle" class="toggle-btn active">Bunk Calculator</button>
+        <button id="lpts-toggle" class="toggle-btn">LPTS Calculator</button>
       </div>
+      
+      <!-- Bunk Calculator Form -->
+      <div id="bunk-calculator" class="bunk-calculator">
+        <div class="input-container">
+          <label for="percentage">Percentage Required</label>
+          <select name="percentage" id="percentage">
+            <option value="70">70%</option>
+            <option value="75">75%</option>
+            <option value="80">80%</option>
+            <option value="85" selected>85%</option>
+            <option value="90">90%</option>
+          </select>
+        </div>
 
-      <div class="input-container">
-        <label for="total-input">Total Classes</label>
-        <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
+        <div class="input-container">
+          <label for="total-input">Total Classes</label>
+          <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
+        </div>
+
+        <div class="input-container">
+          <label for="present-input">Present Classes</label>
+          <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
+        </div>
       </div>
+      
+      <!-- LPTS Calculator Form -->
+      <div id="lpts-calculator" class="lpts-calculator">
+        <div class="input-container">
+          <label for="lecturePercentage">Lecture Component (%)</label>
+          <input name="lecturePercentage" type="number" id="lecturePercentage" autocomplete="off" min="0" max="100" placeholder="Enter lecture attendance %"/>
+        </div>
 
-      <div class="input-container">
-        <label for="present-input">Present Classes</label>
-        <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
+        <div class="input-container">
+          <label for="tutorialPercentage">Tutorial Component (%)</label>
+          <input name="tutorialPercentage" type="number" id="tutorialPercentage" autocomplete="off" min="0" max="100" placeholder="Enter tutorial attendance %"/>
+        </div>
+
+        <div class="input-container">
+          <label for="practicalPercentage">Practical Component (%)</label>
+          <input name="practicalPercentage" type="number" id="practicalPercentage" autocomplete="off" min="0" max="100" placeholder="Enter practical attendance %"/>
+        </div>
+
+        <div class="input-container">
+          <label for="skillingPercentage">Skilling Component (%)</label>
+          <input name="skillingPercentage" type="number" id="skillingPercentage" autocomplete="off" min="0" max="100" placeholder="Enter skilling attendance %"/>
+        </div>
       </div>
 
       <div class="button-group">
@@ -998,9 +1206,26 @@ body[data-theme="light"] .reset-btn:hover {
         </button>
       </div>
 
-      <div class="results-container">
+      <div class="results-container" id="results-container">
         <div class="results-title">Results</div>
-        <div id="output-div" class="results-content"></div>
+        <div id="output-div" class="results-content">
+          <!-- Bunk calculator results will be inserted here -->
+          
+          <!-- LPTS calculator results -->
+          <div class="progress-container" id="progress-container">
+            <svg class="progress-circle" width="200" height="200" viewBox="0 0 200 200">
+              <circle class="progress-background" cx="100" cy="100" r="90" />
+              <circle class="progress-bar" cx="100" cy="100" r="90" stroke-dasharray="565.48" stroke-dashoffset="565.48" />
+            </svg>
+            <div class="progress-text">
+              <div id="attendanceValue" class="progress-value">0%</div>
+              <div class="progress-label">Overall Attendance</div>
+            </div>
+          </div>
+          
+          <div class="results-title" style="margin-top: 25px; display: none;" id="component-title">Component Analysis</div>
+          <div id="componentAnalysis" class="components-grid"></div>
+        </div>
       </div>
 
       <div id="gif-container" class="gif-container">
@@ -1012,7 +1237,7 @@ body[data-theme="light"] .reset-btn:hover {
 
   <footer>
     <div class="footer-content">
-      <p>&copy; 2025 KLU Attendance Calculator. All rights reserved.</p>
+      <p>&copy; 2025 Attendance Calculator. All rights reserved.</p>
       <a href="https://t.me/students_of_klu" target="_blank" class="telegram-btn">
         <i class="fab fa-telegram-plane"></i> Join Telegram
       </a>
@@ -1020,6 +1245,7 @@ body[data-theme="light"] .reset-btn:hover {
   </footer>
 
   <script>
+// Disable right-click
 // Disable right-click
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
@@ -1110,309 +1336,578 @@ function showBlockMessage() {
   `;
 }
 
-    // DOM Elements
-    const percentageSelect = document.getElementById("percentage");
-    const presentInput = document.getElementById("present-input");
-    const totalInput = document.getElementById("total-input");
-    const btn = document.getElementById("btn");
-    const resetBtn = document.getElementById("reset-btn");
-    const pdfBtn = document.getElementById("pdf-btn");
-    const outputDiv = document.getElementById("output-div");
-    const gifContainer = document.getElementById("gif-container");
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-    const closeMenu = document.getElementById('close-menu');
+// DOM Elements
+const bunkToggle = document.getElementById('bunk-toggle');
+const lptsToggle = document.getElementById('lpts-toggle');
+const bunkCalculator = document.getElementById('bunk-calculator');
+const lptsCalculator = document.getElementById('lpts-calculator');
+const progressContainer = document.getElementById('progress-container');
+const componentTitle = document.getElementById('component-title');
+const componentAnalysisEl = document.getElementById('componentAnalysis');
 
-    // Initialize GIF container as hidden
-    window.addEventListener('load', () => {
-      gifContainer.style.display = 'none';
-    });
+// Bunk Calculator Elements
+const percentageSelect = document.getElementById("percentage");
+const presentInput = document.getElementById("present-input");
+const totalInput = document.getElementById("total-input");
 
-    // Mobile menu functionality
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.add('active');
-      mobileMenuBackdrop.style.display = 'block';
-      document.body.classList.add('menu-open');
-    });
+// LPTS Calculator Elements
+const lecturePercentageInput = document.getElementById("lecturePercentage");
+const tutorialPercentageInput = document.getElementById("tutorialPercentage");
+const practicalPercentageInput = document.getElementById("practicalPercentage");
+const skillingPercentageInput = document.getElementById("skillingPercentage");
 
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      mobileMenuBackdrop.style.display = 'none';
-      document.body.classList.remove('menu-open');
-    });
+// Common Elements
+const btn = document.getElementById("btn");
+const resetBtn = document.getElementById("reset-btn");
+const pdfBtn = document.getElementById("pdf-btn");
+const outputDiv = document.getElementById("output-div");
+const gifContainer = document.getElementById("gif-container");
+const attendanceValueEl = document.getElementById("attendanceValue");
+const progressBar = document.querySelector(".progress-bar");
+const resultsContainer = document.getElementById("results-container");
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+const closeMenu = document.getElementById('close-menu');
 
-    mobileMenuBackdrop.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      mobileMenuBackdrop.style.display = 'none';
-      document.body.classList.remove('menu-open');
-    });
+// Initialize
+window.addEventListener('load', () => {
+  gifContainer.style.display = 'none';
+  resultsContainer.style.display = 'none';
+  progressBar.setAttribute('stroke', '#00a8e1');
+  progressBar.setAttribute('stroke-dashoffset', '565.48');
+});
 
-    // Calculate required attendance to reach target percentage
-    function reqAttendance(present, total, percentage) {
-      return Math.ceil((percentage * total - 100 * present) / (100 - percentage));
+// Mobile menu functionality
+menuToggle.addEventListener('click', () => {
+  mobileMenu.classList.add('active');
+  mobileMenuBackdrop.style.display = 'block';
+  document.body.classList.add('menu-open');
+});
+
+closeMenu.addEventListener('click', () => {
+  mobileMenu.classList.remove('active');
+  mobileMenuBackdrop.style.display = 'none';
+  document.body.classList.remove('menu-open');
+});
+
+mobileMenuBackdrop.addEventListener('click', () => {
+  mobileMenu.classList.remove('active');
+  mobileMenuBackdrop.style.display = 'none';
+  document.body.classList.remove('menu-open');
+});
+
+// Calculator toggle functionality
+bunkToggle.addEventListener('click', () => {
+  bunkToggle.classList.add('active');
+  lptsToggle.classList.remove('active');
+  bunkCalculator.style.display = 'block';
+  lptsCalculator.style.display = 'none';
+  progressContainer.style.display = 'none';
+  componentTitle.style.display = 'none';
+  componentAnalysisEl.style.display = 'none';
+  resetCalculator();
+});
+
+lptsToggle.addEventListener('click', () => {
+  lptsToggle.classList.add('active');
+  bunkToggle.classList.remove('active');
+  lptsCalculator.style.display = 'block';
+  bunkCalculator.style.display = 'none';
+  progressContainer.style.display = 'block';
+  componentTitle.style.display = 'block';
+  componentAnalysisEl.style.display = 'grid';
+  resetCalculator();
+});
+
+// BUNK CALCULATOR FUNCTIONS
+// Calculate required attendance to reach target percentage
+function reqAttendance(present, total, percentage) {
+  return Math.ceil((percentage * total - 100 * present) / (100 - percentage));
+}
+
+// Calculate how many days can be bunked while maintaining target percentage
+function daysToBunk(present, total, percentage) {
+  return Math.floor((100 * present - percentage * total) / percentage);
+}
+
+// Generate text for bunkable days
+function daysToBunkText(daysAvailableToBunk, present, total) {
+  return `You can bunk for <strong>${daysAvailableToBunk}</strong> more classes.<br><br>
+  <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+  <strong>After Bunking:</strong> ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`;
+}
+
+// Generate text for required attendance
+function daysToAttendClassText(attendanceNeeded, present, total, percentage) {
+  return `You need to attend <strong>${attendanceNeeded}</strong> more classes to reach ${percentage}%<br><br>
+  <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
+  <strong>Required Attendance:</strong> ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`;
+}
+
+// LPTS CALCULATOR FUNCTIONS
+// Calculate weighted attendance
+function calculateWeightedAttendance() {
+  const weights = {
+    lecture: 1.0,
+    tutorial: 0.25,
+    practical: 0.5,
+    skilling: 0.25
+  };
+
+  let totalWeight = 0;
+  let weightedSum = 0;
+
+  const components = [
+    {
+      name: "Lecture",
+      percentage: parseFloat(lecturePercentageInput.value) || null,
+      weight: weights.lecture
+    },
+    {
+      name: "Tutorial",
+      percentage: parseFloat(tutorialPercentageInput.value) || null,
+      weight: weights.tutorial
+    },
+    {
+      name: "Practical",
+      percentage: parseFloat(practicalPercentageInput.value) || null,
+      weight: weights.practical
+    },
+    {
+      name: "Skilling",
+      percentage: parseFloat(skillingPercentageInput.value) || null,
+      weight: weights.skilling
     }
+  ];
 
-    // Calculate how many days can be bunked while maintaining target percentage
-    function daysToBunk(present, total, percentage) {
-      return Math.floor((100 * present - percentage * total) / percentage);
+  // Calculate weighted sum and total weight
+  components.forEach(component => {
+    if (component.percentage !== null) {
+      totalWeight += component.weight;
+      weightedSum += component.percentage * component.weight;
     }
+  });
 
-    // Generate text for bunkable days
-    function daysToBunkText(daysAvailableToBunk, present, total) {
-      return `You can bunk for <strong>${daysAvailableToBunk}</strong> more classes.<br><br>
-      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
-      <strong>After Bunking:</strong> ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`;
+  if (totalWeight === 0) return null;
+
+  return weightedSum / totalWeight;
+}
+
+// Set progress bar color based on percentage (SVG attribute method)
+function setProgressColor(percentage) {
+  if (percentage >= 85) {
+    progressBar.setAttribute('stroke', "#28a745"); // Green
+  } else if (percentage >= 80) {
+    progressBar.setAttribute('stroke', "#ffc107"); // Yellow
+  } else if (percentage >= 75) {
+    progressBar.setAttribute('stroke', "#ffc107"); // Yellow
+  } else {
+    progressBar.setAttribute('stroke', "#dc3545"); // Red
+  }
+}
+
+// Animate value counter
+function animateValue(element, start, end, duration) {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const value = progress * (end - start) + start;
+    element.textContent = value.toFixed(2) + "%";
+    // Animate the progress arc
+    const max = 565.48; // Circumference = 2*Math.PI*54
+    const pct = Math.max(0, Math.min(100, value));
+    progressBar.setAttribute('stroke-dashoffset', max - (max * pct / 100));
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
     }
+  };
+  window.requestAnimationFrame(step);
+}
 
-    // Generate text for required attendance
-    function daysToAttendClassText(attendanceNeeded, present, total, percentage) {
-      return `You need to attend <strong>${attendanceNeeded}</strong> more classes to reach ${percentage}%<br><br>
-      <strong>Current Attendance:</strong> ${present}/${total} (${((present / total) * 100).toFixed(2)}%)<br>
-      <strong>Required Attendance:</strong> ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`;
+// COMMON FUNCTIONS
+// Calculate button click handler
+btn.addEventListener("click", () => {
+  if (bunkToggle.classList.contains('active')) {
+    calculateBunkAttendance();
+  } else {
+    calculateLPTSAttendance();
+  }
+});
+
+function calculateBunkAttendance() {
+  let present = parseInt(presentInput.value);
+  let total = parseInt(totalInput.value);
+  let percentage = parseInt(percentageSelect.value);
+
+  // Hide GIF initially
+  gifContainer.style.display = "none";
+  resultsContainer.style.display = "none";
+
+  // Validate inputs
+  if (isNaN(present)) {
+    presentInput.focus();
+    outputDiv.innerHTML = "Please enter your present classes";
+    return;
+  }
+
+  if (isNaN(total)) {
+    totalInput.focus();
+    outputDiv.innerHTML = "Please enter total classes held";
+    return;
+  }
+
+  if (present < 0 || total <= 0 || present > total) {
+    outputDiv.innerHTML = "Invalid values! Present can't be more than total or negative";
+    return;
+  }
+
+  // Calculate current attendance percentage
+  const currentAttendance = (present / total) * 100;
+
+  // Show appropriate GIF based on attendance percentage
+  showAttendanceGIF(currentAttendance);
+
+  // Determine if user can bunk or needs to attend more classes
+  if (currentAttendance >= percentage) {
+    const daysAvailableToBunk = daysToBunk(present, total, percentage);
+    outputDiv.innerHTML = daysToBunkText(
+      daysAvailableToBunk,
+      present,
+      total
+    );
+  } else {
+    const attendanceNeeded = reqAttendance(present, total, percentage);
+    outputDiv.innerHTML = daysToAttendClassText(
+      attendanceNeeded,
+      present,
+      total,
+      percentage
+    );
+  }
+  
+  // Show results
+  resultsContainer.style.display = 'block';
+}
+
+function calculateLPTSAttendance() {
+  const overallAttendance = calculateWeightedAttendance();
+
+  // Hide GIF initially
+  gifContainer.style.display = "none";
+  resultsContainer.style.display = "none";
+
+  // Validate inputs
+  if (overallAttendance === null) {
+    alert("Please provide percentages for at least one component");
+    return;
+  }
+
+  // Show appropriate GIF based on attendance percentage
+  showAttendanceGIF(overallAttendance);
+
+  // Set progress bar color
+  setProgressColor(overallAttendance);
+
+  // Animate the attendance value and progress circle
+  animateValue(attendanceValueEl, 0, overallAttendance, 1000);
+
+  // Update component analysis with cards
+  componentAnalysisEl.innerHTML = '';
+  const components = [
+    { name: "Lecture", percentage: lecturePercentageInput.value, weight: "100%" },
+    { name: "Tutorial", percentage: tutorialPercentageInput.value, weight: "25%" },
+    { name: "Practical", percentage: practicalPercentageInput.value, weight: "50%" },
+    { name: "Skilling", percentage: skillingPercentageInput.value, weight: "25%" }
+  ];
+
+  components.forEach(component => {
+    if (component.percentage) { // Only show components with values
+      const card = document.createElement('div');
+      card.className = 'component-card';
+
+      const header = document.createElement('div');
+      header.className = 'component-header';
+
+      const name = document.createElement('div');
+      name.className = 'component-name';
+      name.textContent = component.name;
+
+      const weight = document.createElement('div');
+      weight.className = 'component-weight';
+      weight.textContent = component.weight;
+
+      header.appendChild(name);
+      header.appendChild(weight);
+
+      const percentage = document.createElement('div');
+      percentage.className = 'component-percentage';
+      percentage.textContent = `${component.percentage}%`;
+
+      card.appendChild(header);
+      card.appendChild(percentage);
+
+      componentAnalysisEl.appendChild(card);
     }
+  });
 
-    // Calculate button click handler
-    btn.addEventListener("click", () => {
-      let present = parseInt(presentInput.value);
-      let total = parseInt(totalInput.value);
-      let percentage = parseInt(percentageSelect.value);
+  // Show results
+  resultsContainer.style.display = 'block';
+}
 
-      // Hide GIF initially
-      gifContainer.style.display = "none";
+function showAttendanceGIF(percentage) {
+  if (percentage === 100) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
+  } else if (percentage >= 90 && percentage < 100) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
+  } else if (percentage >= 86 && percentage <= 89) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
+  } else if (percentage === 85) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
+  } else if (percentage >= 80 && percentage <= 84) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
+  } else if (percentage >= 76 && percentage <= 79) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
+  } else if (percentage === 75) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
+  } else if (percentage >= 70 && percentage <= 74) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/wr8kJmGOJo4AAAAC/king-srihari.gif";
+  } else if (percentage >= 60 && percentage <= 69) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
+  } else if (percentage >= 31 && percentage <= 59) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
+  } else if (percentage < 30) {
+    gifContainer.style.display = "flex";
+    document.getElementById("attendance-gif").src =
+      "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
+  } else {
+    gifContainer.style.display = "none";
+  }
+}
 
-      // Validate inputs
-      if (isNaN(present)) {
-        presentInput.focus();
-        outputDiv.innerHTML = "Please enter your present classes";
-        return;
-      }
+// Reset button click handler
+resetBtn.addEventListener("click", resetCalculator);
 
-      if (isNaN(total)) {
-        totalInput.focus();
-        outputDiv.innerHTML = "Please enter total classes held";
-        return;
-      }
+function resetCalculator() {
+  if (bunkToggle.classList.contains('active')) {
+    presentInput.value = "";
+    totalInput.value = "";
+    percentageSelect.value = "85";
+    outputDiv.innerHTML = "";
+  } else {
+    lecturePercentageInput.value = "";
+    tutorialPercentageInput.value = "";
+    practicalPercentageInput.value = "";
+    skillingPercentageInput.value = "";
+    // Reset progress bar color
+    progressBar.setAttribute('stroke', '#00a8e1');
+    // Reset progress arc
+    progressBar.setAttribute('stroke-dashoffset', '565.48');
+    attendanceValueEl.textContent = "0%";
+    componentAnalysisEl.innerHTML = "";
+  }
+  
+  resultsContainer.style.display = "none";
+  gifContainer.style.display = "none";
+}
 
-      if (present < 0 || total <= 0 || present > total) {
-        outputDiv.innerHTML = "Invalid values! Present can't be more than total or negative";
-        return;
-      }
+// PDF Generation function
+function generatePDF() {
+  // Check if there are any results to export
+  if (resultsContainer.style.display !== "block") {
+    alert("Please calculate attendance first before generating PDF");
+    return;
+  }
 
-      // Calculate current attendance percentage
-      const currentAttendance = (present / total) * 100;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-      // Show appropriate GIF based on attendance percentage
-      if (currentAttendance === 100) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/tsR_Jh7tN2QAAAAC/dookudu-mahesh-babu.gif";
-      } else if (currentAttendance >= 90 && currentAttendance < 100) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/_iNnyfjGR5IAAAAC/super-wow.gif";
-      } else if (currentAttendance === 85) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-safe-prabhas.gif";
-      } else if (currentAttendance >= 86 && currentAttendance <= 89) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/LysLyQSXYwwAAAAC/viral-telugu-boy-wow-meme.gif";
-      } else if (currentAttendance >= 80 && currentAttendance <= 84) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/QayrQqNWTU0AAAAC/nagarjuna-kodutunam-nagarjuna-koduthunaam.gif";
-      } else if (currentAttendance === 75) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/jwNNLNr2ZpUAAAAC/telugu-comedy.gif";
-      } else if (currentAttendance >= 76 && currentAttendance <= 79) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/QM8x56xs_l8AAAAC/hbd-to-actor-comedian-writer-krishna-bhagavan-krishna-bhagavan.gif";
-      } else if (currentAttendance >= 70 && currentAttendance <= 74) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/wr8kJmGOJo4AAAAC/king-srihari.gif";
-      } else if (currentAttendance >= 60 && currentAttendance <= 69) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/0QWz0O7H5f8AAAAC/sad-emotional.gif";
-      } else if (currentAttendance >= 30 && currentAttendance <= 59) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/Lkljd5DExD0AAAAC/brahmi-telugu.gif";
-      } else if (currentAttendance < 30) {
-        gifContainer.style.display = "flex";
-        document.getElementById("attendance-gif").src =
-          "https://media1.tenor.com/m/txVq4SBENycAAAAC/crying-cry.gif";
-      } else {
-        gifContainer.style.display = "none";
-      }
+  // Add header
+  doc.setFontSize(20);
+  doc.setTextColor(0, 168, 225);
+  doc.text("Attendance Report", 105, 15, null, null, 'center');
 
-      // Determine if user can bunk or needs to attend more classes
-      if (currentAttendance >= percentage) {
-        const daysAvailableToBunk = daysToBunk(present, total, percentage);
-        outputDiv.innerHTML = daysToBunkText(
-          daysAvailableToBunk,
-          present,
-          total
-        );
-      } else {
-        const attendanceNeeded = reqAttendance(present, total, percentage);
-        outputDiv.innerHTML = daysToAttendClassText(
-          attendanceNeeded,
-          present,
-          total,
-          percentage
-        );
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, null, null, 'center');
+
+  // Add a line
+  doc.setDrawColor(0, 168, 225);
+  doc.setLineWidth(0.5);
+  doc.line(20, 40, 190, 40);
+
+  if (bunkToggle.classList.contains('active')) {
+    // Bunk Calculator PDF
+    const present = parseInt(presentInput.value) || 0;
+    const total = parseInt(totalInput.value) || 0;
+    const percentage = parseInt(percentageSelect.value) || 85;
+    const currentAttendance = total > 0 ? (present / total) * 100 : 0;
+
+    // Create the data for the table
+    const data = [
+      ["Parameter", "Value"],
+      ["Percentage Required", `${percentage}%`],
+      ["Total Classes", total],
+      ["Present Classes", present],
+      ["Current Attendance", `${currentAttendance.toFixed(2)}%`],
+      ["Status", currentAttendance >= percentage ? "Safe" : "Attention Needed"]
+    ];
+
+    // Add the table
+    doc.autoTable({
+      startY: 50,
+      head: [data[0]],
+      body: data.slice(1),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [0, 168, 225],
+        textColor: [255, 255, 255]
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240]
       }
     });
 
-    // Reset button click handler
-    resetBtn.addEventListener("click", () => {
-      presentInput.value = "";
-      totalInput.value = "";
-      percentageSelect.value = "85";
-      outputDiv.innerHTML = "";
-      gifContainer.style.display = "none";
-    });
-
-    // PDF Generation function
-    function generatePDF() {
-      // Check if there are any results to export
-      if (!outputDiv.textContent.trim()) {
-        outputDiv.innerHTML = "Please calculate attendance first before generating PDF";
-        return;
-      }
-
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      // Get current values
-      const present = parseInt(presentInput.value) || 0;
-      const total = parseInt(totalInput.value) || 0;
-      const percentage = parseInt(percentageSelect.value) || 85;
-      const currentAttendance = total > 0 ? (present / total) * 100 : 0;
-
-      // Add KLU logo or header
-      doc.setFontSize(20);
-      doc.setTextColor(0, 168, 225);
-      doc.text("SOK Attendance Report", 105, 15, null, null, 'center');
-      
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, null, null, 'center');
-
-      // Add a line
-      doc.setDrawColor(0, 168, 225);
-      doc.setLineWidth(0.5);
-      doc.line(20, 30, 190, 30);
-
-      // Create the data for the table
-      const data = [
-        ["Parameter", "Value"],
-        ["Percentage Required", `${percentage}%`],
-        ["Total Classes", total],
-        ["Present Classes", present],
-        ["Current Attendance", `${currentAttendance.toFixed(2)}%`],
-        ["Status", currentAttendance >= percentage ? "Safe" : "Attention Needed"]
-      ];
-
-      // Add the table
-      doc.autoTable({
-        startY: 40,
-        head: [data[0]],
-        body: data.slice(1),
-        theme: 'grid',
-        headStyles: {
-          fillColor: [0, 168, 225],
-          textColor: [255, 255, 255]
-        },
-        alternateRowStyles: {
-          fillColor: [240, 240, 240]
-        }
-      });
-
-      // Add detailed results
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      
-      let startY = doc.lastAutoTable.finalY + 15;
-      
-      if (currentAttendance >= percentage) {
-        const daysAvailableToBunk = daysToBunk(present, total, percentage);
-        doc.text(`You can bunk for ${daysAvailableToBunk} more classes.`, 20, startY);
-        doc.text(`After bunking: ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
-      } else {
-        const attendanceNeeded = reqAttendance(present, total, percentage);
-        doc.text(`You need to attend ${attendanceNeeded} more classes to reach ${percentage}%.`, 20, startY);
-        doc.text(`Required attendance: ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
-      }
-
-      // Add footer
-      doc.setFontSize(10);
-      doc.setTextColor(150, 150, 150);
-      doc.text("Generated by SOK Attendance Calculator", 105, 285, null, null, 'center');
-      doc.text("https://your-website.com", 105, 290, null, null, 'center');
-
-      // Save the PDF
-      doc.save(`SOK_Attendance_Report_${new Date().toISOString().slice(0,10)}.pdf`);
-    }
-
-    // PDF button click handler
-    pdfBtn.addEventListener("click", generatePDF);
-
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const sunIcon = themeToggle.querySelector('.bi-sun');
-    const moonIcon = themeToggle.querySelector('.bi-moon');
+    // Add detailed results
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
     
-    // Toggle between light and dark theme
-    function toggleTheme() {
-      if (document.body.getAttribute('data-theme') === 'light') {
-        document.body.removeAttribute('data-theme');
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-      } else {
-        document.body.setAttribute('data-theme', 'light');
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-      }
-      localStorage.setItem('theme', document.body.getAttribute('data-theme'));
-    }
-
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.setAttribute('data-theme', 'light');
-      sunIcon.style.display = 'none';
-      moonIcon.style.display = 'block';
+    let startY = doc.lastAutoTable.finalY + 15;
+    
+    if (currentAttendance >= percentage) {
+      const daysAvailableToBunk = daysToBunk(present, total, percentage);
+      doc.text(`You can bunk for ${daysAvailableToBunk} more classes.`, 20, startY);
+      doc.text(`After bunking: ${present}/${daysAvailableToBunk + total} (${((present / (daysAvailableToBunk + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
     } else {
-      sunIcon.style.display = 'block';
-      moonIcon.style.display = 'none';
+      const attendanceNeeded = reqAttendance(present, total, percentage);
+      doc.text(`You need to attend ${attendanceNeeded} more classes to reach ${percentage}%.`, 20, startY);
+      doc.text(`Required attendance: ${attendanceNeeded + present}/${attendanceNeeded + total} (${(((attendanceNeeded + present) / (attendanceNeeded + total)) * 100).toFixed(2)}%)`, 20, startY + 10);
     }
+  } else {
+    // LPTS Calculator PDF
+    const lecturePercentage = lecturePercentageInput.value || "Not provided";
+    const tutorialPercentage = tutorialPercentageInput.value || "Not provided";
+    const practicalPercentage = practicalPercentageInput.value || "Not provided";
+    const skillingPercentage = skillingPercentageInput.value || "Not provided";
+    const overallAttendance = calculateWeightedAttendance();
 
-    // Add event listener for theme toggle
-    themeToggle.addEventListener('click', toggleTheme);
+    // Create the data for the table
+    const data = [
+      ["Component", "Percentage", "Weight"],
+      ["Lecture", `${lecturePercentage}%`, "100%"],
+      ["Tutorial", `${tutorialPercentage}%`, "25%"],
+      ["Practical", `${practicalPercentage}%`, "50%"],
+      ["Skilling", `${skillingPercentage}%`, "25%"],
+      ["", "", ""],
+      ["Overall Attendance", `${overallAttendance.toFixed(2)}%`, ""]
+    ];
 
-    // Make the Enter key trigger calculation
-    document.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        btn.click();
+    // Add the table
+    doc.autoTable({
+      startY: 50,
+      head: [data[0]],
+      body: data.slice(1, -2),
+      theme: 'grid',
+      headStyles: {
+        fillColor: [0, 168, 225],
+        textColor: [255, 255, 255]
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240]
       }
     });
 
-    // Header scroll effect
-    window.addEventListener('scroll', function() {
-      const header = document.getElementById('main-header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
-  </script>
+    // Add overall attendance
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Overall Attendance: ${overallAttendance.toFixed(2)}%`, 20, doc.lastAutoTable.finalY + 15);
+  }
+
+  // Add footer
+  doc.setFontSize(10);
+  doc.setTextColor(150, 150, 150);
+  doc.text("Generated by Attendance Calculator", 105, 285, null, null, 'center');
+  doc.text("https://your-website.com", 105, 290, null, null, 'center');
+
+  // Save the PDF
+  const calculatorType = bunkToggle.classList.contains('active') ? 'Bunk' : 'LPTS';
+  doc.save(`${calculatorType}_Attendance_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+}
+
+// PDF button click handler
+pdfBtn.addEventListener("click", generatePDF);
+
+// Theme Toggle Functionality
+const themeToggle = document.getElementById('theme-toggle');
+const sunIcon = themeToggle.querySelector('.bi-sun');
+const moonIcon = themeToggle.querySelector('.bi-moon');
+
+// Toggle between light and dark theme
+function toggleTheme() {
+  if (document.body.getAttribute('data-theme') === 'light') {
+    document.body.removeAttribute('data-theme');
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+  } else {
+    document.body.setAttribute('data-theme', 'light');
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+  }
+  localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+}
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  document.body.setAttribute('data-theme', 'light');
+  sunIcon.style.display = 'none';
+  moonIcon.style.display = 'block';
+} else {
+  sunIcon.style.display = 'block';
+  moonIcon.style.display = 'none';
+}
+
+// Add event listener for theme toggle
+themeToggle.addEventListener('click', toggleTheme);
+
+// Make the Enter key trigger calculation
+document.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    btn.click();
+  }
+});
+
+// Header scroll effect
+window.addEventListener('scroll', function() {
+  const header = document.getElementById('main-header');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+</script>
 </body>
 </html>
