@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SOK Attendance Calculator</title>
+  <title>LPTS & Bunk Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-  <!-- Add Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <!-- jsPDF for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -427,6 +425,45 @@ body[data-theme="light"] .bi-moon {
   color: rgba(255, 255, 255, 0.7);
   font-size: 15px; /* Increased from 14px */
   margin-top: 12px; /* Increased from 10px */
+}
+
+/* Tab styles */
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.tab.active {
+  color: #00a8e1;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #00a8e1, #007eb9);
+  border-radius: 3px 3px 0 0;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
 }
 
 /* Input fields - Updated for larger size */
@@ -928,7 +965,7 @@ body[data-theme="light"] .reset-btn:hover {
       <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
       </button>
-      <h1>SOK Attendance Calculator</h1>
+      <h1>LPTS & Bunk Calculator</h1>
     </div>
     <nav id="desktop-nav">
       <ul>
@@ -961,58 +998,107 @@ body[data-theme="light"] .reset-btn:hover {
   <div class="main-content">
     <section class="calculator-section">
       <div class="calculator-header">
-        <h2 class="calculator-title">Attendance Calculator</h2>
-        <p class="calculator-description">Calculate how many classes you need to attend or can bunk</p>
+        <h2 class="calculator-title">LPTS & Bunk Calculator</h2>
+        <p class="calculator-description">Calculate your LPTS components and bunk days</p>
       </div>
       
-      <div class="input-container">
-        <label for="percentage">Percentage Required</label>
-        <select name="percentage" id="percentage">
-          <option value="70">70%</option>
-          <option value="75">75%</option>
-          <option value="80">80%</option>
-          <option value="85" selected>85%</option>
-          <option value="90">90%</option>
-        </select>
+      <!-- Tab Container -->
+      <div class="tab-container">
+        <div class="tab active" data-tab="bunk">Bunk Calculator</div>
+        <div class="tab" data-tab="lpts">LPTS Calculator</div>
       </div>
+      
+      <!-- Bunk Calculator Tab -->
+      <div id="bunk-tab" class="tab-content active">
+        <div class="input-container">
+          <label for="percentage">Percentage Required</label>
+          <select name="percentage" id="percentage">
+            <option value="70">70%</option>
+            <option value="75">75%</option>
+            <option value="80">80%</option>
+            <option value="85" selected>85%</option>
+            <option value="90">90%</option>
+          </select>
+        </div>
 
-      <div class="input-container">
-        <label for="total-input">Total Classes</label>
-        <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
+        <div class="input-container">
+          <label for="total-input">Total Classes</label>
+          <input name="total" type="number" id="total-input" autocomplete="off" min="0" placeholder="Enter total classes"/>
+        </div>
+
+        <div class="input-container">
+          <label for="present-input">Present Classes</label>
+          <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
+        </div>
+
+        <div class="button-group">
+          <button id="btn" class="calculate-btn">
+            <i class="fas fa-calculator"></i> Calculate
+          </button>
+          <button id="reset-btn" class="reset-btn">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+          <button id="pdf-btn" class="pdf-btn">
+            <i class="fas fa-file-pdf"></i> Generate PDF
+          </button>
+        </div>
+
+        <div class="results-container">
+          <div class="results-title">Results</div>
+          <div id="output-div" class="results-content"></div>
+        </div>
+
+        <div id="gif-container" class="gif-container">
+          <img id="attendance-gif" class="attendance-gif" src="https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-s-prabhas.gif"
+            alt="Safe Attendance GIF" />
+        </div>
       </div>
+      
+      <!-- LPTS Calculator Tab -->
+      <div id="lpts-tab" class="tab-content">
+        <div class="input-container">
+          <label for="lecture-input">Lecture Component (%)</label>
+          <input name="lecture" type="number" id="lecture-input" autocomplete="off" min="0" max="100" placeholder="Enter lecture marks (100% weight)"/>
+        </div>
 
-      <div class="input-container">
-        <label for="present-input">Present Classes</label>
-        <input name="present" type="number" id="present-input" autocomplete="off" min="0" placeholder="Enter present classes"/>
-      </div>
+        <div class="input-container">
+          <label for="tutorial-input">Tutorial Component (%)</label>
+          <input name="tutorial" type="number" id="tutorial-input" autocomplete="off" min="0" max="100" placeholder="Enter tutorial marks (25% weight)"/>
+        </div>
 
-      <div class="button-group">
-        <button id="btn" class="calculate-btn">
-          <i class="fas fa-calculator"></i> Calculate
-        </button>
-        <button id="reset-btn" class="reset-btn">
-          <i class="fas fa-redo"></i> Reset
-        </button>
-        <button id="pdf-btn" class="pdf-btn">
-          <i class="fas fa-file-pdf"></i> Generate PDF
-        </button>
-      </div>
+        <div class="input-container">
+          <label for="practical-input">Practical Component (%)</label>
+          <input name="practical" type="number" id="practical-input" autocomplete="off" min="0" max="100" placeholder="Enter practical marks (50% weight)"/>
+        </div>
 
-      <div class="results-container">
-        <div class="results-title">Results</div>
-        <div id="output-div" class="results-content"></div>
-      </div>
+        <div class="input-container">
+          <label for="skilling-input">Skilling Component (%)</label>
+          <input name="skilling" type="number" id="skilling-input" autocomplete="off" min="0" max="100" placeholder="Enter skilling marks (25% weight)"/>
+        </div>
 
-      <div id="gif-container" class="gif-container">
-        <img id="attendance-gif" class="attendance-gif" src="https://media1.tenor.com/m/NJOcESg6x5wAAAAC/i-am-s-prabhas.gif"
-          alt="Safe Attendance GIF" />
+        <div class="button-group">
+          <button id="lpts-calculate-btn" class="calculate-btn">
+            <i class="fas fa-calculator"></i> Calculate
+          </button>
+          <button id="lpts-reset-btn" class="reset-btn">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+          <button id="lpts-pdf-btn" class="pdf-btn">
+            <i class="fas fa-file-pdf"></i> Generate PDF
+          </button>
+        </div>
+
+        <div class="results-container">
+          <div class="results-title">LPTS Results</div>
+          <div id="lpts-output-div" class="results-content"></div>
+        </div>
       </div>
     </section>
   </div>
 
   <footer>
     <div class="footer-content">
-      <p>&copy; 2025 KLU Attendance Calculator. All rights reserved.</p>
+      <p>&copy; 2025 LPTS & Bunk Calculator. All rights reserved.</p>
       <a href="https://t.me/students_of_klu" target="_blank" class="telegram-btn">
         <i class="fab fa-telegram-plane"></i> Join Telegram
       </a>
@@ -1123,6 +1209,31 @@ function showBlockMessage() {
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
     const closeMenu = document.getElementById('close-menu');
+    
+    // LPTS Elements
+    const lectureInput = document.getElementById("lecture-input");
+    const tutorialInput = document.getElementById("tutorial-input");
+    const practicalInput = document.getElementById("practical-input");
+    const skillingInput = document.getElementById("skilling-input");
+    const lptsCalculateBtn = document.getElementById("lpts-calculate-btn");
+    const lptsResetBtn = document.getElementById("lpts-reset-btn");
+    const lptsPdfBtn = document.getElementById("lpts-pdf-btn");
+    const lptsOutputDiv = document.getElementById("lpts-output-div");
+    
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and content
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab') + '-tab';
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
 
     // Initialize GIF container as hidden
     window.addEventListener('load', () => {
@@ -1296,10 +1407,10 @@ function showBlockMessage() {
       const percentage = parseInt(percentageSelect.value) || 85;
       const currentAttendance = total > 0 ? (present / total) * 100 : 0;
 
-      // Add KLU logo or header
+      // Add header
       doc.setFontSize(20);
       doc.setTextColor(0, 168, 225);
-      doc.text("SOK Attendance Report", 105, 15, null, null, 'center');
+      doc.text("Bunk Calculator Report", 105, 15, null, null, 'center');
       
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
@@ -1354,15 +1465,182 @@ function showBlockMessage() {
       // Add footer
       doc.setFontSize(10);
       doc.setTextColor(150, 150, 150);
-      doc.text("Generated by SOK Attendance Calculator", 105, 285, null, null, 'center');
+      doc.text("Generated by LPTS & Bunk Calculator", 105, 285, null, null, 'center');
       doc.text("https://your-website.com", 105, 290, null, null, 'center');
 
       // Save the PDF
-      doc.save(`SOK_Attendance_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+      doc.save(`Bunk_Calculator_Report_${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     // PDF button click handler
     pdfBtn.addEventListener("click", generatePDF);
+
+    // LPTS Calculator Functions
+    function calculateLPTS() {
+      const lecture = parseFloat(lectureInput.value) || 0;
+      const tutorial = parseFloat(tutorialInput.value) || 0;
+      const practical = parseFloat(practicalInput.value) || 0;
+      const skilling = parseFloat(skillingInput.value) || 0;
+      
+      // Validate inputs
+      if (isNaN(lecture) {
+        lectureInput.focus();
+        lptsOutputDiv.innerHTML = "Please enter lecture marks";
+        return;
+      }
+      
+      if (isNaN(tutorial)) {
+        tutorialInput.focus();
+        lptsOutputDiv.innerHTML = "Please enter tutorial marks";
+        return;
+      }
+      
+      if (isNaN(practical)) {
+        practicalInput.focus();
+        lptsOutputDiv.innerHTML = "Please enter practical marks";
+        return;
+      }
+      
+      if (isNaN(skilling)) {
+        skillingInput.focus();
+        lptsOutputDiv.innerHTML = "Please enter skilling marks";
+        return;
+      }
+      
+      // Validate ranges
+      if (lecture < 0 || lecture > 100 || 
+          tutorial < 0 || tutorial > 100 || 
+          practical < 0 || practical > 100 || 
+          skilling < 0 || skilling > 100) {
+        lptsOutputDiv.innerHTML = "All marks must be between 0 and 100";
+        return;
+      }
+      
+      // Calculate weighted scores
+      const lectureWeighted = lecture * 1.0; // 100% weight
+      const tutorialWeighted = tutorial * 0.25; // 25% weight
+      const practicalWeighted = practical * 0.5; // 50% weight
+      const skillingWeighted = skilling * 0.25; // 25% weight
+      
+      // Calculate total score
+      const totalScore = lectureWeighted + tutorialWeighted + practicalWeighted + skillingWeighted;
+      
+      // Generate result text
+      lptsOutputDiv.innerHTML = `
+        <strong>Lecture (100% weight):</strong> ${lecture}% → ${lectureWeighted.toFixed(2)} points<br>
+        <strong>Tutorial (25% weight):</strong> ${tutorial}% → ${tutorialWeighted.toFixed(2)} points<br>
+        <strong>Practical (50% weight):</strong> ${practical}% → ${practicalWeighted.toFixed(2)} points<br>
+        <strong>Skilling (25% weight):</strong> ${skilling}% → ${skillingWeighted.toFixed(2)} points<br><br>
+        <strong>Total LPTS Score:</strong> ${totalScore.toFixed(2)}/100<br>
+        <strong>Percentage:</strong> ${totalScore.toFixed(2)}%
+      `;
+    }
+    
+    // LPTS Reset button
+    lptsResetBtn.addEventListener("click", () => {
+      lectureInput.value = "";
+      tutorialInput.value = "";
+      practicalInput.value = "";
+      skillingInput.value = "";
+      lptsOutputDiv.innerHTML = "";
+    });
+    
+    // LPTS PDF Generation
+    function generateLPTSReport() {
+      // Check if there are any results to export
+      if (!lptsOutputDiv.textContent.trim()) {
+        lptsOutputDiv.innerHTML = "Please calculate LPTS first before generating PDF";
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Get current values
+      const lecture = parseFloat(lectureInput.value) || 0;
+      const tutorial = parseFloat(tutorialInput.value) || 0;
+      const practical = parseFloat(practicalInput.value) || 0;
+      const skilling = parseFloat(skillingInput.value) || 0;
+      
+      // Calculate weighted scores
+      const lectureWeighted = lecture * 1.0;
+      const tutorialWeighted = tutorial * 0.25;
+      const practicalWeighted = practical * 0.5;
+      const skillingWeighted = skilling * 0.25;
+      const totalScore = lectureWeighted + tutorialWeighted + practicalWeighted + skillingWeighted;
+
+      // Add header
+      doc.setFontSize(20);
+      doc.setTextColor(0, 168, 225);
+      doc.text("LPTS Calculator Report", 105, 15, null, null, 'center');
+      
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, null, null, 'center');
+
+      // Add a line
+      doc.setDrawColor(0, 168, 225);
+      doc.setLineWidth(0.5);
+      doc.line(20, 30, 190, 30);
+
+      // Create the data for the table
+      const data = [
+        ["Component", "Marks (%)", "Weight", "Weighted Score"],
+        ["Lecture", lecture, "100%", lectureWeighted.toFixed(2)],
+        ["Tutorial", tutorial, "25%", tutorialWeighted.toFixed(2)],
+        ["Practical", practical, "50%", practicalWeighted.toFixed(2)],
+        ["Skilling", skilling, "25%", skillingWeighted.toFixed(2)],
+        ["Total", "", "", totalScore.toFixed(2)]
+      ];
+
+      // Add the table
+      doc.autoTable({
+        startY: 40,
+        head: [data[0]],
+        body: data.slice(1),
+        theme: 'grid',
+        headStyles: {
+          fillColor: [0, 168, 225],
+          textColor: [255, 255, 255]
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240]
+        }
+      });
+
+      // Add summary
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      
+      const startY = doc.lastAutoTable.finalY + 15;
+      doc.text(`Final LPTS Score: ${totalScore.toFixed(2)}/100 (${totalScore.toFixed(2)}%)`, 20, startY);
+      
+      // Add grade interpretation if needed
+      if (totalScore >= 85) {
+        doc.text("Grade Interpretation: Excellent", 20, startY + 10);
+      } else if (totalScore >= 70) {
+        doc.text("Grade Interpretation: Good", 20, startY + 10);
+      } else if (totalScore >= 50) {
+        doc.text("Grade Interpretation: Satisfactory", 20, startY + 10);
+      } else {
+        doc.text("Grade Interpretation: Needs Improvement", 20, startY + 10);
+      }
+
+      // Add footer
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Generated by LPTS & Bunk Calculator", 105, 285, null, null, 'center');
+      doc.text("https://your-website.com", 105, 290, null, null, 'center');
+
+      // Save the PDF
+      doc.save(`LPTS_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+    }
+    
+    // LPTS PDF button click handler
+    lptsPdfBtn.addEventListener("click", generateLPTSReport);
+    
+    // LPTS Calculate button click handler
+    lptsCalculateBtn.addEventListener("click", calculateLPTS);
 
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('theme-toggle');
@@ -1400,7 +1678,13 @@ function showBlockMessage() {
     // Make the Enter key trigger calculation
     document.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
-        btn.click();
+        // Check which tab is active
+        const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+        if (activeTab === 'bunk') {
+          btn.click();
+        } else {
+          lptsCalculateBtn.click();
+        }
       }
     });
 
