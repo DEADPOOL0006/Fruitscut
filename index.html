@@ -1625,28 +1625,27 @@ function calculateBunkAttendance() {
   resultsContainer.style.display = "none";
 
   // Validate inputs
-  // Validate inputs
-if (isNaN(present)) {
-  presentInput.focus();
-  outputDiv.innerHTML = "<span style='color:red;'>Please enter your present classes.</span>";
-  return;
-}
+  if (isNaN(present)) {
+    presentInput.focus();
+    outputDiv.innerHTML = "Please enter your present classes";
+    return;
+  }
 
-if (isNaN(total)) {
-  totalInput.focus();
-  outputDiv.innerHTML = "<span style='color:red;'>Please enter total classes held.</span>";
-  return;
-}
+  if (isNaN(total)) {
+    totalInput.focus();
+    outputDiv.innerHTML = "Please enter total classes held";
+    return;
+  }
 
-if (present < 0 || total <= 0) {
-  outputDiv.innerHTML = "<span style='color:red;'>Invalid values! Present and total must be positive numbers.</span>";
-  return;
-}
+  if (present < 0 || total <= 0) {
+    outputDiv.innerHTML = "Invalid values! Please enter positive numbers.";
+    return;
+  }
 
-if (present > total) {
-  outputDiv.innerHTML = "<span style='color:red;'>Invalid values! Present classes can't be more than total classes.</span>";
-  return;
-}
+  if (present > total) {
+    outputDiv.innerHTML = "Invalid input: <strong>Present Classes</strong> cannot be more than <strong>Total Classes</strong>.";
+    return;
+  }
 
   // Calculate current attendance percentage
   const currentAttendance = (present / total) * 100;
@@ -1675,7 +1674,6 @@ if (present > total) {
   // Show results
   resultsContainer.style.display = 'block';
 }
-
 function calculateLPTSAttendance() {
   const overallAttendance = calculateWeightedAttendance();
 
