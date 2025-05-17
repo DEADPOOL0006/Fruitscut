@@ -10,8 +10,6 @@
   <!-- jsPDF for PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  <!-- Confetti library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 * {
   margin: 0;
@@ -769,132 +767,6 @@ body[data-theme="light"] .reset-btn:hover {
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Celebration Popups */
-.celebration-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.5);
-  background: linear-gradient(135deg, #00a8e1, #0077b6);
-  color: white;
-  padding: 30px 40px;
-  border-radius: 15px;
-  text-align: center;
-  z-index: 2000;
-  opacity: 0;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  pointer-events: none;
-  max-width: 90%;
-  width: 400px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-.celebration-popup.active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.celebration-popup h3 {
-  font-size: 28px;
-  margin-bottom: 15px;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.celebration-popup p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.celebration-popup .close-popup {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  padding: 10px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s;
-  font-size: 16px;
-}
-
-.celebration-popup .close-popup:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Special celebration styles */
-.celebration-100 {
-  background: linear-gradient(135deg, #ffd700, #ff8c00);
-  border: 3px solid rgba(255, 215, 0, 0.5);
-}
-
-.celebration-85 {
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-  border: 3px solid rgba(76, 175, 80, 0.5);
-}
-
-.celebration-75 {
-  background: linear-gradient(135deg, #9C27B0, #6A1B9A);
-  border: 3px solid rgba(156, 39, 176, 0.5);
-}
-
-/* Confetti overlay */
-.confetti-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1500;
-  pointer-events: none;
-  display: none;
-}
-
-/* 3D Text Effect */
-.celebration-text {
-  font-size: 36px;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: white;
-  text-shadow: 
-    1px 1px 0 #999,
-    2px 2px 0 #999,
-    3px 3px 0 #999,
-    4px 4px 0 #999,
-    5px 5px 0 #999,
-    6px 6px 0 #999,
-    7px 7px 0 #777,
-    8px 8px 0 #777,
-    9px 9px 0 #777,
-    10px 10px 0 #777,
-    11px 11px 0 #555,
-    12px 12px 0 #555,
-    13px 13px 0 #555,
-    14px 14px 0 #555,
-    15px 15px 0 #333,
-    20px 20px 15px rgba(0,0,0,0.5);
-  margin-bottom: 20px;
-}
-
-/* Celebration icons */
-.celebration-icon {
-  font-size: 60px;
-  margin-bottom: 20px;
-  animation: bounce 1s infinite alternate;
-}
-
-@keyframes bounce {
-  from {
-    transform: translateY(0) rotate(0deg);
-  }
-  to {
-    transform: translateY(-15px) rotate(5deg);
-  }
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .menu-toggle {
@@ -1000,28 +872,6 @@ body[data-theme="light"] .reset-btn:hover {
   footer {
     padding: 20px 5%;
   }
-  
-  /* Celebration popup adjustments */
-  .celebration-popup {
-    width: 90%;
-    padding: 20px;
-  }
-  
-  .celebration-popup h3 {
-    font-size: 24px;
-  }
-  
-  .celebration-popup p {
-    font-size: 16px;
-  }
-  
-  .celebration-text {
-    font-size: 28px;
-  }
-  
-  .celebration-icon {
-    font-size: 50px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1068,47 +918,11 @@ body[data-theme="light"] .reset-btn:hover {
     width: 100%;
     min-height: 200px;
   }
-  
-  /* Celebration popup adjustments */
-  .celebration-popup {
-    width: 95%;
-    padding: 15px;
-  }
-  
-  .celebration-popup h3 {
-    font-size: 20px;
-  }
-  
-  .celebration-popup p {
-    font-size: 14px;
-  }
-  
-  .celebration-text {
-    font-size: 24px;
-  }
-  
-  .celebration-icon {
-    font-size: 40px;
-  }
 }
 </style>
 </head>
 
 <body>
-  <!-- Celebration Popup -->
-  <div id="celebration-popup" class="celebration-popup">
-    <div class="celebration-icon">
-      <i class="fas fa-trophy"></i>
-    </div>
-    <div class="celebration-text" id="celebration-text">Congratulations!</div>
-    <h3 id="celebration-title">Perfect Attendance!</h3>
-    <p id="celebration-message">You've achieved 100% attendance. Keep up the great work!</p>
-    <button class="close-popup" id="close-popup">Awesome!</button>
-  </div>
-  
-  <!-- Confetti Overlay -->
-  <div id="confetti-overlay" class="confetti-overlay"></div>
-
   <header id="main-header">
     <div class="logo">
       <button class="menu-toggle" id="menu-toggle">
@@ -1309,12 +1123,6 @@ function showBlockMessage() {
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
     const closeMenu = document.getElementById('close-menu');
-    const celebrationPopup = document.getElementById('celebration-popup');
-    const closePopupBtn = document.getElementById('close-popup');
-    const confettiOverlay = document.getElementById('confetti-overlay');
-    const celebrationText = document.getElementById('celebration-text');
-    const celebrationTitle = document.getElementById('celebration-title');
-    const celebrationMessage = document.getElementById('celebration-message');
 
     // Initialize GIF container as hidden
     window.addEventListener('load', () => {
@@ -1339,115 +1147,6 @@ function showBlockMessage() {
       mobileMenuBackdrop.style.display = 'none';
       document.body.classList.remove('menu-open');
     });
-
-    // Close celebration popup
-    closePopupBtn.addEventListener('click', () => {
-      celebrationPopup.classList.remove('active');
-      confettiOverlay.style.display = 'none';
-    });
-
-    // Show celebration popup with confetti
-    function showCelebration(type, percentage) {
-      // Set different styles and messages based on the achievement
-      let popupClass = '';
-      let icon = '';
-      let text = '';
-      let title = '';
-      let message = '';
-      
-      if (type === '100') {
-        popupClass = 'celebration-100';
-        icon = '<i class="fas fa-crown"></i>';
-        text = 'PERFECT!';
-        title = '100% Attendance!';
-        message = 'You have perfect attendance! You are a role model for all students!';
-      } else if (type === '85') {
-        popupClass = 'celebration-85';
-        icon = '<i class="fas fa-check-circle"></i>';
-        text = 'SAFE ZONE!';
-        title = '85% Attendance Achieved!';
-        message = 'You have reached the safe zone! You can bunk some classes now!';
-      } else if (type === '75') {
-        popupClass = 'celebration-75';
-        icon = '<i class="fas fa-exclamation-circle"></i>';
-        text = 'MINIMUM!';
-        title = '75% Attendance Reached!';
-        message = 'You have just made it to the minimum requirement. Be careful not to bunk more!';
-      }
-      
-      // Update popup content
-      document.querySelector('.celebration-icon').innerHTML = icon;
-      celebrationText.textContent = text;
-      celebrationTitle.textContent = title;
-      celebrationMessage.textContent = message;
-      
-      // Set the appropriate class
-      celebrationPopup.className = 'celebration-popup ' + popupClass;
-      
-      // Show the popup and confetti
-      celebrationPopup.classList.add('active');
-      confettiOverlay.style.display = 'block';
-      
-      // Trigger confetti
-      triggerConfetti(type);
-    }
-
-    // Trigger different confetti effects based on achievement level
-    function triggerConfetti(type) {
-      const count = type === '100' ? 300 : (type === '85' ? 200 : 150);
-      const defaults = {
-        spread: 70,
-        ticks: 100,
-        gravity: 0.5,
-        decay: 0.94,
-        startVelocity: 30,
-      };
-
-      if (type === '100') {
-        // Gold confetti for 100%
-        confetti({
-          ...defaults,
-          particleCount: count,
-          scalar: 1.2,
-          shapes: ['star', 'circle'],
-          colors: ['#FFD700', '#FFA500', '#FF8C00', '#FFFFFF'],
-        });
-        
-        // Additional bursts
-        setTimeout(() => {
-          confetti({
-            ...defaults,
-            particleCount: count/2,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 }
-          });
-          confetti({
-            ...defaults,
-            particleCount: count/2,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 }
-          });
-        }, 250);
-      } 
-      else if (type === '85') {
-        // Green confetti for 85%
-        confetti({
-          ...defaults,
-          particleCount: count,
-          colors: ['#4CAF50', '#2E7D32', '#8BC34A', '#CDDC39'],
-        });
-      } 
-      else if (type === '75') {
-        // Purple confetti for 75%
-        confetti({
-          ...defaults,
-          particleCount: count,
-          colors: ['#9C27B0', '#6A1B9A', '#BA68C8', '#CE93D8'],
-        });
-      }
-    }
 
     // Calculate required attendance to reach target percentage
     function reqAttendance(present, total, percentage) {
@@ -1502,15 +1201,6 @@ function showBlockMessage() {
 
       // Calculate current attendance percentage
       const currentAttendance = (present / total) * 100;
-
-      // Check for special celebration percentages
-      if (currentAttendance === 100) {
-        showCelebration('100', currentAttendance);
-      } else if (Math.round(currentAttendance) === 85) {
-        showCelebration('85', currentAttendance);
-      } else if (Math.round(currentAttendance) === 75) {
-        showCelebration('75', currentAttendance);
-      }
 
       // Show appropriate GIF based on attendance percentage
       if (currentAttendance === 100) {
@@ -1587,8 +1277,6 @@ function showBlockMessage() {
       percentageSelect.value = "85";
       outputDiv.innerHTML = "";
       gifContainer.style.display = "none";
-      celebrationPopup.classList.remove('active');
-      confettiOverlay.style.display = 'none';
     });
 
     // PDF Generation function
@@ -1724,7 +1412,6 @@ function showBlockMessage() {
       } else {
         header.classList.remove('scrolled');
       }
-      
     });
   </script>
 </body>
