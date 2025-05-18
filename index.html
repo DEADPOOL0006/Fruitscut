@@ -1325,7 +1325,6 @@ body[data-theme="light"] .reset-btn:hover {
 
   <script>
 // Disable right-click
-// Disable right-click
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
 });
@@ -1616,40 +1615,38 @@ btn.addEventListener("click", () => {
 });
 
 function calculateBunkAttendance() {
-  let present = parseInt(presentInput.value);
-  let total = parseInt(totalInput.value);
-  let percentage = parseInt(percentageSelect.value);
-
   // Hide GIF initially
   gifContainer.style.display = "none";
   resultsContainer.style.display = "none";
 
   // Validate inputs
-if ((!presentInput.value || !totalInput.value)) {
-  presentInput.focus();
-  alert("Please enter both total classes 📘 and attended classes 👨‍🏫 before calculating!");
-  return;
-}
+  if ((!presentInput.value || !totalInput.value)) {
+    presentInput.focus();
+    alert("Please enter both total classes 📘 and attended classes 👨‍🏫 before calculating!");
+    return;
+  }
 
-let present = parseInt(presentInput.value);
-let total = parseInt(totalInput.value);
+  let present = parseInt(presentInput.value);
+  let total = parseInt(totalInput.value);
 
-if (isNaN(present)) {
-  presentInput.focus();
-  alert("Enter attended classes 👨‍🏫!");
-  return;
-}
+  if (isNaN(present)) {
+    presentInput.focus();
+    alert("Enter attended classes 👨‍🏫!");
+    return;
+  }
 
-if (isNaN(total)) {
-  totalInput.focus();
-  alert("Enter total classes 📘!");
-  return;
-}
+  if (isNaN(total)) {
+    totalInput.focus();
+    alert("Enter total classes 📘!");
+    return;
+  }
 
-if (present < 0 || total <= 0 || present > total) {
-  alert("Invalid values! Present can't be more than total or negative");
-  return;
-}
+  if (present < 0 || total <= 0 || present > total) {
+    alert("Invalid values! Present can't be more than total or negative");
+    return;
+  }
+
+  let percentage = parseInt(percentageSelect.value);
 
   // Calculate current attendance percentage
   const currentAttendance = (present / total) * 100;
@@ -1995,7 +1992,6 @@ window.addEventListener('scroll', function() {
     header.classList.remove('scrolled');
   }
 });
-
 </script>
 </body>
 </html>  
