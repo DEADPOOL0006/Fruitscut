@@ -1625,23 +1625,23 @@ function calculateBunkAttendance() {
   resultsContainer.style.display = "none";
 
   // Validate inputs
-  if (isNaN(present)) {
-    presentInput.focus();
-    outputDiv.innerHTML = "Please enter your present classes";
-    return;
-  }
+if (isNaN(present)) {
+  presentInput.focus();
+  alert("Enter attended classes 👨‍🏫");
+  return;
+}
 
-  if (isNaN(total)) {
-    totalInput.focus();
-    outputDiv.innerHTML = "Please enter total classes held";
-    return;
-  }
+if (isNaN(total)) {
+  totalInput.focus();
+  alert("Please enter total classes held");
+  return;
+}
 
-  if (present < 0 || total <= 0 || present > total) {
-    outputDiv.innerHTML = "Invalid values! Present can't be more than total or negative";
-    return;
-  }
-
+if (present < 0 || total <= 0 || present > total) {
+  alert("Invalid values! Present can't be more than total or negative");
+  return;
+}
+  
   // Calculate current attendance percentage
   const currentAttendance = (present / total) * 100;
 
