@@ -1577,16 +1577,33 @@ function calculateWeightedAttendance() {
 }
 
 function setProgressColor(percentage) {
-  if (percentage >= 85) {
-    progressBar.setAttribute('stroke', "#28a745");
+  let color = "#B71C1C"; // Default to darkest red
+
+  if (percentage === 100) {
+    color = "#00C853"; // Bright Green
+  } else if (percentage >= 90) {
+    color = "#43A047"; // Green
+  } else if (percentage >= 86) {
+    color = "#66BB6A"; // Light Green
+  } else if (percentage === 85) {
+    color = "#D4E157"; // Yellow-Green
   } else if (percentage >= 80) {
-    progressBar.setAttribute('stroke', "#ffc107");
-  } else if (percentage >= 75) {
-    progressBar.setAttribute('stroke', "#ffc107");
-  } else {
-    progressBar.setAttribute('stroke', "#dc3545");
+    color = "#FFEE58"; // Mustard Yellow
+  } else if (percentage >= 76) {
+    color = "#FFCA28"; // Amber
+  } else if (percentage === 75) {
+    color = "#FFB300"; // Deep Amber
+  } else if (percentage >= 70) {
+    color = "#FF8F00"; // Orange
+  } else if (percentage >= 60) {
+    color = "#EF5350"; // Light Red
+  } else if (percentage >= 31) {
+    color = "#E53935"; // Red
   }
+
+  progressBar.setAttribute('stroke', color);
 }
+
 
 function animateValue(element, start, end, duration) {
   let startTimestamp = null;
@@ -1609,25 +1626,25 @@ function calculateBunkAttendance() {
   resultsContainer.style.display = "none";
 
   // Validate inputs
-  if (!presentInput.value || !totalInput.value) {
-    presentInput.focus();
-    alert("Please enter both total classes and attended classes before calculating!");
-    return;
-  }
+if (!presentInput.value || !totalInput.value) {
+  presentInput.focus();
+  alert("⚠️ Please enter both total classes and attended classes before calculating!");
+  return;
+}
 
-  const present = parseInt(presentInput.value);
-  const total = parseInt(totalInput.value);
-  const percentage = parseInt(percentageSelect.value);
+const present = parseInt(presentInput.value);
+const total = parseInt(totalInput.value);
+const percentage = parseInt(percentageSelect.value);
 
-  if (isNaN(present) || isNaN(total)) {
-    alert("Please enter valid numbers for both fields");
-    return;
-  }
+if (isNaN(present) || isNaN(total)) {
+  alert("❌ Please enter valid numbers for both fields");
+  return;
+}
 
-  if (present < 0 || total <= 0 || present > total) {
-    alert("Invalid values! Present can't be more than total or negative");
-    return;
-  }
+if (present < 0 || total <= 0 || present > total) {
+  alert("🚫 Invalid values! Present can't be more than total or negative");
+  return;
+}
 
   const currentAttendance = (present / total) * 100;
   showAttendanceGIF(currentAttendance);
