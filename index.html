@@ -302,7 +302,7 @@ body[data-theme="light"] .mobile-menu nav ul li a {
 
 body[data-theme="light"] .mobile-menu nav ul li a:hover,
 body[data-theme="light"] .mobile-menu nav ul li a.active {
-  color: yellow;
+  color: black;
   border: 2px solid rgba(0, 0, 0, 0.2);
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 10px;
@@ -436,32 +436,46 @@ body[data-theme="light"] .bi-moon {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Tab base style */
 .calculator-tab {
+  position: relative;
   padding: 10px 20px;
   cursor: pointer;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-  position: relative;
+  transition: color 0.3s ease;
+  overflow: hidden;
 }
 
+/* Hover color */
+.calculator-tab:hover {
+  color: #00a8e1;
+}
+
+/* Active tab */
 .calculator-tab.active {
   color: #00a8e1;
 }
 
-.calculator-tab.active::after {
+/* Active tab underline */
+.calculator-tab::after {
   content: '';
   position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
+  bottom: 0;
+  left: 50%;
+  width: 0%;
   height: 2px;
   background: #00a8e1;
+  transition: all 0.4s ease;
+  transform: translateX(-50%);
 }
 
-.calculator-tab:hover {
-  color: #00a8e1;
+/* On hover or active, expand underline */
+.calculator-tab:hover::after,
+.calculator-tab.active::after {
+  width: 100%;
 }
+
 
 /* Calculator content */
 .calculator-content {
@@ -584,6 +598,11 @@ body[data-theme="light"] #percentage:focus {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  display: none; /* Hidden by default */
+}
+
+.pdf-btn.visible {
+  display: flex; /* Show when visible class is added */
 }
 
 .pdf-btn:hover {
@@ -608,6 +627,7 @@ body[data-theme="light"] .pdf-btn:hover {
   background: rgba(0, 168, 225, 0.1);
   border-radius: 8px;
   border-left: 3px solid #00a8e1;
+  display: none;
 }
 
 .results-title {
@@ -1417,34 +1437,44 @@ function daysToAttendClassText(attendanceNeeded, present, total, percentage) {
 
 // Calculate button click handler for Bunk Calculator
 bunkBtn.addEventListener("click", () => {
-  let present = parseInt(presentInput.value);
-  let total = parseInt(totalInput.value);
-  let percentage = parseInt(percentageSelect.value);
+  let present = presentInput.value.trim();
+  let total = totalInput.value.trim();
 
   // Hide GIF initially
   bunkGifContainer.style.display = "none";
 
-  // Validate inputs
-  if (isNaN(present)) {
+  // Validation logic
+  if (present === "" && total === "") {
+    alert("Please enter both total and attended classes");
+    bunkOutputDiv.innerHTML = "";
+    return;
+  }
+  if (total !== "" && present === "") {
+    alert("Enter present classes");
     presentInput.focus();
-    bunkOutputDiv.innerHTML = "Please enter your present classes";
+    bunkOutputDiv.innerHTML = "";
     return;
   }
-
-  if (isNaN(total)) {
+  if (present !== "" && total === "") {
+    alert("Enter total classes");
     totalInput.focus();
-    bunkOutputDiv.innerHTML = "Please enter total classes held";
+    bunkOutputDiv.innerHTML = "";
     return;
   }
 
-  if (present < 0 || total <= 0 || present > total) {
-    bunkOutputDiv.innerHTML = "Invalid values! Present can't be more than total or negative";
+  // Convert to numbers
+  present = parseInt(present);
+  total = parseInt(total);
+  const percentage = parseInt(percentageSelect.value);
+
+  if (isNaN(present) || isNaN(total) || present < 0 || total <= 0 || present > total) {
+    alert("Attended classes cannot be more than total classes");
+    bunkOutputDiv.innerHTML = "";
     return;
   }
 
   // Calculate current attendance percentage
   const currentAttendance = (present / total) * 100;
-
   // Show appropriate GIF based on attendance percentage
   if (currentAttendance === 100) {
     bunkGifContainer.style.display = "flex";
@@ -1512,7 +1542,9 @@ bunkBtn.addEventListener("click", () => {
     );
   }
   
+  // Show results and PDF button
   bunkResultsContainer.style.display = 'block';
+  bunkPdfBtn.classList.add('visible');
 });
 
 // Reset button click handler for Bunk Calculator
@@ -1523,6 +1555,7 @@ bunkResetBtn.addEventListener("click", () => {
   bunkOutputDiv.innerHTML = "";
   bunkGifContainer.style.display = "none";
   bunkResultsContainer.style.display = 'none';
+  bunkPdfBtn.classList.remove('visible');
 });
 
 // PDF Generation function for Bunk Calculator
@@ -1833,8 +1866,9 @@ lptsBtn.addEventListener("click", () => {
     }
   });
 
-  // Show results
+  // Show results and PDF button
   lptsResultsContainer.style.display = 'block';
+  lptsPdfBtn.classList.add('visible');
 });
 
 // Reset button click handler for LPTS Calculator
@@ -1850,6 +1884,8 @@ lptsResetBtn.addEventListener("click", () => {
   // Reset progress arc
   progressBar.setAttribute('stroke-dashoffset', 565.48);
   attendanceValueEl.textContent = "0%";
+  // Hide PDF button
+  lptsPdfBtn.classList.remove('visible');
 });
 
 // PDF Generation function for LPTS Calculator
