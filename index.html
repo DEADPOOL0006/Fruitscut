@@ -1511,7 +1511,9 @@ function setupCalculatorToggles() {
     componentTitle.style.display = 'none';
     componentAnalysisEl.style.display = 'none';
     resetCalculator();
-    outputDiv.style.display = 'block';
+    outputDiv.innerHTML = "";
+    resultsContainer.style.display = 'none';
+    gifContainer.style.display = 'none';
   });
 
   lptsToggle.addEventListener('click', () => {
@@ -1523,7 +1525,12 @@ function setupCalculatorToggles() {
     componentTitle.style.display = 'block';
     componentAnalysisEl.style.display = 'grid';
     resetCalculator();
-    outputDiv.style.display = 'none'; // Hide Bunk result in LPTS mode
+    progressBar.setAttribute('stroke', '#00a8e1');
+    progressBar.setAttribute('stroke-dashoffset', '565.48');
+    attendanceValueEl.textContent = "0%";
+    outputDiv.innerHTML = "";
+    resultsContainer.style.display = 'none';
+    gifContainer.style.display = 'none';
   });
 }
 
@@ -1560,19 +1567,53 @@ function calculateWeightedAttendance() {
   let totalWeight = 0;
   let weightedSum = 0;
 
-  const components = [
-    { name: "Lecture", percentage: parseFloat(lecturePercentageInput.value) || null, weight: weights.lecture },
-    { name: "Tutorial", percentage: parseFloat(tutorialPercentageInput.value) || null, weight: weights.tutorial },
-    { name: "Practical", percentage: parseFloat(practicalPercentageInput.value) || null, weight: weights.practical },
-    { name: "Skilling", percentage: parseFloat(skillingPercentageInput.value) || null, weight: weights.skilling }
-  ];
+  const lecturePct = parseFloat(lecturePercentageInput.value);
+  const tutorialPct = parseFloat(tutorialPercentageInput.value);
+  const practicalPct = parseFloat(practicalPercentageInput.value);
+  const skillingPct = parseFloat(skillingPercentageInput.value);
 
-  components.forEach(component => {
-    if (component.percentage !== null) {
-      totalWeight += component.weight;
-      weightedSum += component.percentage * component.weight;
+  // Validate at least one component has a value
+  if (isNaN(lecturePct) && isNaN(tutorialPct) && isNaN(practicalPct) && isNaN(skillingPct)) {
+    alert("Please enter percentages for at least one component");
+    return null;
+  }
+
+  // Calculate weighted sum for each component that has a value
+  if (!isNaN(lecturePct)) {
+    if (lecturePct < 0 || lecturePct > 100) {
+      alert("Lecture percentage must be between 0 and 100");
+      return null;
     }
-  });
+    totalWeight += weights.lecture;
+    weightedSum += lecturePct * weights.lecture;
+  }
+
+  if (!isNaN(tutorialPct)) {
+    if (tutorialPct < 0 || tutorialPct > 100) {
+      alert("Tutorial percentage must be between 0 and 100");
+      return null;
+    }
+    totalWeight += weights.tutorial;
+    weightedSum += tutorialPct * weights.tutorial;
+  }
+
+  if (!isNaN(practicalPct)) {
+    if (practicalPct < 0 || practicalPct > 100) {
+      alert("Practical percentage must be between 0 and 100");
+      return null;
+    }
+    totalWeight += weights.practical;
+    weightedSum += practicalPct * weights.practical;
+  }
+
+  if (!isNaN(skillingPct)) {
+    if (skillingPct < 0 || skillingPct > 100) {
+      alert("Skilling percentage must be between 0 and 100");
+      return null;
+    }
+    totalWeight += weights.skilling;
+    weightedSum += skillingPct * weights.skilling;
+  }
 
   return totalWeight === 0 ? null : weightedSum / totalWeight;
 }
@@ -1667,7 +1708,6 @@ function calculateLPTSAttendance() {
   resultsContainer.style.display = "none";
 
   if (overallAttendance === null) {
-    alert("Please provide percentages for at least one component");
     return;
   }
 
@@ -1678,14 +1718,30 @@ function calculateLPTSAttendance() {
   // Update component analysis
   componentAnalysisEl.innerHTML = '';
   const components = [
-    { name: "Lecture", percentage: lecturePercentageInput.value, weight: "100%" },
-    { name: "Tutorial", percentage: tutorialPercentageInput.value, weight: "25%" },
-    { name: "Practical", percentage: practicalPercentageInput.value, weight: "50%" },
-    { name: "Skilling", percentage: skillingPercentageInput.value, weight: "25%" }
+    { 
+      name: "Lecture", 
+      percentage: parseFloat(lecturePercentageInput.value) || null, 
+      weight: "100%" 
+    },
+    { 
+      name: "Tutorial", 
+      percentage: parseFloat(tutorialPercentageInput.value) || null, 
+      weight: "25%" 
+    },
+    { 
+      name: "Practical", 
+      percentage: parseFloat(practicalPercentageInput.value) || null, 
+      weight: "50%" 
+    },
+    { 
+      name: "Skilling", 
+      percentage: parseFloat(skillingPercentageInput.value) || null, 
+      weight: "25%" 
+    }
   ];
 
   components.forEach(component => {
-    if (component.percentage) {
+    if (component.percentage !== null) {
       const card = document.createElement('div');
       card.className = 'component-card';
 
@@ -1694,7 +1750,7 @@ function calculateLPTSAttendance() {
           <div class="component-name">${component.name}</div>
           <div class="component-weight">${component.weight}</div>
         </div>
-        <div class="component-percentage">${component.percentage}%</div>
+        <div class="component-percentage">${component.percentage.toFixed(2)}%</div>
       `;
 
       componentAnalysisEl.appendChild(card);
@@ -1730,22 +1786,18 @@ function showAttendanceGIF(percentage) {
 }
 
 function resetCalculator() {
-  // Clear all inputs and outputs for both calculators
-  presentInput.value = "";
-  totalInput.value = "";
-  percentageSelect.value = "85";
-  outputDiv.innerHTML = "";
-  outputDiv.style.display = 'none'; // Hide outputDiv by default
-
-  lecturePercentageInput.value = "";
-  tutorialPercentageInput.value = "";
-  practicalPercentageInput.value = "";
-  skillingPercentageInput.value = "";
-  progressBar.setAttribute('stroke', '#00a8e1');
-  progressBar.setAttribute('stroke-dashoffset', '565.48');
-  attendanceValueEl.textContent = "0%";
-  componentAnalysisEl.innerHTML = "";
-
+  if (bunkToggle.classList.contains('active')) {
+    presentInput.value = "";
+    totalInput.value = "";
+    percentageSelect.value = "85";
+  } else {
+    lecturePercentageInput.value = "";
+    tutorialPercentageInput.value = "";
+    practicalPercentageInput.value = "";
+    skillingPercentageInput.value = "";
+    componentAnalysisEl.innerHTML = "";
+  }
+  
   resultsContainer.style.display = "none";
   gifContainer.style.display = "none";
 }
