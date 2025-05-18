@@ -1522,7 +1522,7 @@ function setupCalculatorToggles() {
     bunkToggle.classList.remove('active');
     lptsCalculator.style.display = 'block';
     bunkCalculator.style.display = 'none';
-    progressContainer.style.display = 'block'; // always show when toggling to LPTS
+    progressContainer.style.display = 'block';
     componentTitle.style.display = 'block';
     componentAnalysisEl.style.display = 'grid';
     resetCalculator();
@@ -1573,11 +1573,13 @@ function calculateWeightedAttendance() {
   const practicalPct = parseFloat(practicalPercentageInput.value);
   const skillingPct = parseFloat(skillingPercentageInput.value);
 
+  // Validate at least one component has a value
   if (isNaN(lecturePct) && isNaN(tutorialPct) && isNaN(practicalPct) && isNaN(skillingPct)) {
     alert("Please enter percentages for at least one component");
     return null;
   }
 
+  // Calculate weighted sum for each component that has a value
   if (!isNaN(lecturePct)) {
     if (lecturePct < 0 || lecturePct > 100) {
       alert("Lecture percentage must be between 0 and 100");
@@ -1646,18 +1648,104 @@ function setProgressColor(percentage) {
 }
 
 function animateValue(element, start, end, duration) {
+  // Reset progress circle first
+  const max = 565.48;
+  progressBar.setAttribute('stroke-dashoffset', max);
+  
   let startTimestamp = null;
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     const value = progress * (end - start) + start;
     element.textContent = value.toFixed(2) + "%";
-    const max = 565.48;
+    
+    // Update progress circle
     const pct = Math.max(0, Math.min(100, value));
     progressBar.setAttribute('stroke-dashoffset', max - (max * pct / 100));
-    if (progress < 1) window.requestAnimationFrame(step);
+    
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
   };
   window.requestAnimationFrame(step);
+}
+
+function calculateLPTSAttendance() {
+  // First validate inputs
+  const lecturePct = parseFloat(lecturePercentageInput.value);
+  const tutorialPct = parseFloat(tutorialPercentageInput.value);
+  const practicalPct = parseFloat(practicalPercentageInput.value);
+  const skillingPct = parseFloat(skillingPercentageInput.value);
+
+  // Check if at least one component has a value
+  if (isNaN(lecturePct) && isNaN(tutorialPct) && isNaN(practicalPct) && isNaN(skillingPct)) {
+    alert("Please provide percentages for at least one component");
+    return;
+  }
+
+  // Calculate overall attendance
+  const overallAttendance = calculateWeightedAttendance();
+  
+  if (overallAttendance === null || isNaN(overallAttendance)) {
+    return;
+  }
+
+  // Show results
+  gifContainer.style.display = "none";
+  resultsContainer.style.display = "none";
+  
+  // Ensure progress circle is visible
+  progressContainer.style.display = "block";
+  componentTitle.style.display = "block";
+  componentAnalysisEl.style.display = "grid";
+  
+  showAttendanceGIF(overallAttendance);
+  setProgressColor(overallAttendance);
+  animateValue(attendanceValueEl, 0, overallAttendance, 1000);
+
+  // Update component analysis
+  componentAnalysisEl.innerHTML = '';
+  const components = [
+    { 
+      name: "Lecture", 
+      percentage: !isNaN(lecturePct) ? lecturePct : null, 
+      weight: "100%" 
+    },
+    { 
+      name: "Tutorial", 
+      percentage: !isNaN(tutorialPct) ? tutorialPct : null, 
+      weight: "25%" 
+    },
+    { 
+      name: "Practical", 
+      percentage: !isNaN(practicalPct) ? practicalPct : null, 
+      weight: "50%" 
+    },
+    { 
+      name: "Skilling", 
+      percentage: !isNaN(skillingPct) ? skillingPct : null, 
+      weight: "25%" 
+    }
+  ];
+
+  components.forEach(component => {
+    if (component.percentage !== null) {
+      const card = document.createElement('div');
+      card.className = 'component-card';
+
+      card.innerHTML = `
+        <div class="component-header">
+          <div class="component-name">${component.name}</div>
+          <div class="component-weight">${component.weight}</div>
+        </div>
+        <div class="component-percentage">${component.percentage.toFixed(2)}%</div>
+      `;
+
+      componentAnalysisEl.appendChild(card);
+    }
+  });
+
+  resultsContainer.style.display = 'block';
 }
 
 // COMMON FUNCTIONS
@@ -1665,6 +1753,7 @@ function calculateBunkAttendance() {
   gifContainer.style.display = "none";
   resultsContainer.style.display = "none";
 
+  // Validate inputs
   if (!presentInput.value || !totalInput.value) {
     presentInput.focus();
     alert("⚠️ Please enter both total classes and attended classes before calculating!");
@@ -1696,51 +1785,6 @@ function calculateBunkAttendance() {
     outputDiv.innerHTML = daysToAttendClassText(attendanceNeeded, present, total, percentage);
   }
   
-  resultsContainer.style.display = 'block';
-}
-
-function calculateLPTSAttendance() {
-  const overallAttendance = calculateWeightedAttendance();
-
-  gifContainer.style.display = "none";
-  resultsContainer.style.display = "none";
-
-  if (overallAttendance === null) {
-    return;
-  }
-
-  showAttendanceGIF(overallAttendance);
-  setProgressColor(overallAttendance);
-  animateValue(attendanceValueEl, 0, overallAttendance, 1000);
-
-  // Update component analysis
-  componentAnalysisEl.innerHTML = '';
-  const components = [
-    { name: "Lecture", percentage: parseFloat(lecturePercentageInput.value) || null, weight: "100%" },
-    { name: "Tutorial", percentage: parseFloat(tutorialPercentageInput.value) || null, weight: "25%" },
-    { name: "Practical", percentage: parseFloat(practicalPercentageInput.value) || null, weight: "50%" },
-    { name: "Skilling", percentage: parseFloat(skillingPercentageInput.value) || null, weight: "25%" }
-  ];
-
-  components.forEach(component => {
-    if (component.percentage !== null) {
-      const card = document.createElement('div');
-      card.className = 'component-card';
-      card.innerHTML = `
-        <div class="component-header">
-          <div class="component-name">${component.name}</div>
-          <div class="component-weight">${component.weight}</div>
-        </div>
-        <div class="component-percentage">${component.percentage.toFixed(2)}%</div>
-      `;
-      componentAnalysisEl.appendChild(card);
-    }
-  });
-
-  // --- THE MAIN FIX: always show LPTS results and progress circle ---
-  componentAnalysisEl.style.display = 'grid';
-  componentTitle.style.display = 'block';
-  progressContainer.style.display = 'block';
   resultsContainer.style.display = 'block';
 }
 
@@ -1911,7 +1955,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCalculatorToggles();
   setupEventListeners();
 });
-    
 </script>
 </body>
 </html> 
