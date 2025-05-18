@@ -1625,15 +1625,24 @@ function calculateBunkAttendance() {
   resultsContainer.style.display = "none";
 
   // Validate inputs
- if (isNaN(present)) {
+if ((!presentInput.value || !totalInput.value)) {
   presentInput.focus();
-  alert("Please enter your present classes");
+  alert("Please enter both total classes 📘 and attended classes 👨‍🏫 before calculating!");
+  return;
+}
+
+let present = parseInt(presentInput.value);
+let total = parseInt(totalInput.value);
+
+if (isNaN(present)) {
+  presentInput.focus();
+  alert("Enter attended classes 👨‍🏫!");
   return;
 }
 
 if (isNaN(total)) {
   totalInput.focus();
-  alert("Please enter total classes held");
+  alert("Enter total classes 📘!");
   return;
 }
 
