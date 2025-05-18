@@ -1616,37 +1616,45 @@ btn.addEventListener("click", () => {
 });
 
 function calculateBunkAttendance() {
-  let present = parseInt(presentInput.value);
-  let total = parseInt(totalInput.value);
-  let percentage = parseInt(percentageSelect.value);
+  const present = parseInt(presentInput.value);
+  const total = parseInt(totalInput.value);
+  const percentage = parseInt(percentageSelect.value);
 
-  // Hide GIF initially
+  // Hide result sections initially
   gifContainer.style.display = "none";
   resultsContainer.style.display = "none";
 
-  // Validate inputs
-if (isNaN(present)) {
-  presentInput.focus();
-  alert("Enter attended classes 👨‍🏫");
-  return;
-}
+  // Input validation
+  if (!presentInput.value.trim() || !totalInput.value.trim()) {
+    alert("Please enter both total classes 📘 and attended classes 👨‍🏫!");
+    presentInput.focus();
+    return;
+  }
 
-if (isNaN(total)) {
-  totalInput.focus();
-  alert("Please enter total classes held");
-  return;
-}
+  if (isNaN(present)) {
+    alert("Enter attended classes 👨‍🏫!");
+    presentInput.focus();
+    return;
+  }
 
-if (present < 0 || total <= 0 || present > total) {
-  alert("Invalid values! Present can't be more than total or negative");
-  return;
-}
-  
-  // Calculate current attendance percentage
+  if (isNaN(total)) {
+    alert("Enter total classes 📘!");
+    totalInput.focus();
+    return;
+  }
+
+  if (present < 0 || total <= 0 || present > total) {
+    alert("Invalid values! Present can't be more than total or negative");
+    return;
+  }
+
+  // Calculate attendance
   const currentAttendance = (present / total) * 100;
 
-  // Show appropriate GIF based on attendance percentage
+  // Show result and GIF
   showAttendanceGIF(currentAttendance);
+  resultsContainer.style.display = "block"; // Show results if needed
+}
 
   // Determine if user can bunk or needs to attend more classes
   if (currentAttendance >= percentage) {
