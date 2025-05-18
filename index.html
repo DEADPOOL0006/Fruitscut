@@ -1511,6 +1511,7 @@ function setupCalculatorToggles() {
     componentTitle.style.display = 'none';
     componentAnalysisEl.style.display = 'none';
     resetCalculator();
+    outputDiv.style.display = 'block';
   });
 
   lptsToggle.addEventListener('click', () => {
@@ -1522,6 +1523,7 @@ function setupCalculatorToggles() {
     componentTitle.style.display = 'block';
     componentAnalysisEl.style.display = 'grid';
     resetCalculator();
+    outputDiv.style.display = 'none'; // Hide Bunk result in LPTS mode
   });
 }
 
@@ -1728,22 +1730,22 @@ function showAttendanceGIF(percentage) {
 }
 
 function resetCalculator() {
-  if (bunkToggle.classList.contains('active')) {
-    presentInput.value = "";
-    totalInput.value = "";
-    percentageSelect.value = "85";
-    outputDiv.innerHTML = "";
-  } else {
-    lecturePercentageInput.value = "";
-    tutorialPercentageInput.value = "";
-    practicalPercentageInput.value = "";
-    skillingPercentageInput.value = "";
-    progressBar.setAttribute('stroke', '#00a8e1');
-    progressBar.setAttribute('stroke-dashoffset', '565.48');
-    attendanceValueEl.textContent = "0%";
-    componentAnalysisEl.innerHTML = "";
-  }
-  
+  // Clear all inputs and outputs for both calculators
+  presentInput.value = "";
+  totalInput.value = "";
+  percentageSelect.value = "85";
+  outputDiv.innerHTML = "";
+  outputDiv.style.display = 'none'; // Hide outputDiv by default
+
+  lecturePercentageInput.value = "";
+  tutorialPercentageInput.value = "";
+  practicalPercentageInput.value = "";
+  skillingPercentageInput.value = "";
+  progressBar.setAttribute('stroke', '#00a8e1');
+  progressBar.setAttribute('stroke-dashoffset', '565.48');
+  attendanceValueEl.textContent = "0%";
+  componentAnalysisEl.innerHTML = "";
+
   resultsContainer.style.display = "none";
   gifContainer.style.display = "none";
 }
