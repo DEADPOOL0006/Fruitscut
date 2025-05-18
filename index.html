@@ -1325,7 +1325,6 @@ body[data-theme="light"] .reset-btn:hover {
 
   <script>
 // Disable right-click
-// Disable right-click
 document.addEventListener('contextmenu', function (e) {
   e.preventDefault();
 });
@@ -1604,7 +1603,6 @@ function setProgressColor(percentage) {
   progressBar.setAttribute('stroke', color);
 }
 
-
 function animateValue(element, start, end, duration) {
   let startTimestamp = null;
   const step = (timestamp) => {
@@ -1626,25 +1624,25 @@ function calculateBunkAttendance() {
   resultsContainer.style.display = "none";
 
   // Validate inputs
-if (!presentInput.value || !totalInput.value) {
-  presentInput.focus();
-  alert("⚠️ Please enter both total classes and attended classes before calculating!");
-  return;
-}
+  if (!presentInput.value || !totalInput.value) {
+    presentInput.focus();
+    alert("⚠️ Please enter both total classes and attended classes before calculating!");
+    return;
+  }
 
-const present = parseInt(presentInput.value);
-const total = parseInt(totalInput.value);
-const percentage = parseInt(percentageSelect.value);
+  const present = parseInt(presentInput.value);
+  const total = parseInt(totalInput.value);
+  const percentage = parseInt(percentageSelect.value);
 
-if (isNaN(present) || isNaN(total)) {
-  alert("❌ Please enter valid numbers for both fields");
-  return;
-}
+  if (isNaN(present) || isNaN(total)) {
+    alert("❌ Please enter valid numbers for both fields");
+    return;
+  }
 
-if (present < 0 || total <= 0 || present > total) {
-  alert("🚫 Invalid values! Present can't be more than total or negative");
-  return;
-}
+  if (present < 0 || total <= 0 || present > total) {
+    alert("🚫 Invalid values! Present can't be more than total or negative");
+    return;
+  }
 
   const currentAttendance = (present / total) * 100;
   showAttendanceGIF(currentAttendance);
@@ -1875,7 +1873,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCalculatorToggles();
   setupEventListeners();
 });
-
 </script>
 </body>
 </html> 
