@@ -3,72 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simple Interest Calculator (Years)</title>
+  <title>Interest Calculator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #121212;
-      color: #f5f5f5;
+      margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
+      color: #fff;
     }
 
     .container {
       background-color: #1e1e1e;
-      padding: 40px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 255, 100, 0.2);
-      width: 100%;
-      max-width: 400px;
-      min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,255,100,0.2);
+      max-width: 420px;
+      width: 90%;
+      transition: 0.3s ease;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #00ff99;
+      margin-bottom: 24px;
+      color: #00ffaa;
     }
 
     label {
       display: block;
-      margin: 10px 0 5px;
+      margin: 12px 0 6px;
     }
 
     input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: none;
-      border-radius: 5px;
-      margin-bottom: 10px;
+      border-radius: 6px;
       font-size: 16px;
+      color: #000;
+    }
+
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
     }
 
     button {
-      width: 48%;
+      flex: 1;
       padding: 10px;
-      background-color: #00ff99;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 16px;
-      color: #121212;
       cursor: pointer;
-      margin-right: 4%;
-      transition: background-color 0.3s ease;
+      transition: 0.2s ease;
     }
 
-    button:hover {
-      background-color: #00cc77;
+    #calcBtn {
+      background-color: #00ffaa;
+      color: #000;
+      margin-right: 10px;
+    }
+
+    #calcBtn:hover {
+      background-color: #00cc88;
     }
 
     #resetBtn {
       background-color: #ff4d4d;
-      margin-right: 0;
+      color: #fff;
     }
 
     #resetBtn:hover {
@@ -76,65 +83,88 @@
     }
 
     #result {
-      margin-top: 20px;
-      text-align: left;
+      margin-top: 25px;
       font-size: 18px;
-      color: #ffffff;
       white-space: pre-line;
-      font-weight: bold;
-      flex-grow: 1;
+      color: #ffffff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Simple Interest Calculator</h1>
-    <form id="interestForm">
+    <h1>Interest Calculator</h1>
+    <form id="interestForm" autocomplete="off">
       <label for="principal">Principal (₹):</label>
-      <input type="number" id="principal" min="0" required />
+      <input type="text" id="principal" placeholder="Enter amount" />
 
-      <label for="rate">Interest Rate (% per month):</label>
-      <input type="number" id="rate" min="0" step="0.01" required />
+      <label for="rate">Monthly Interest Rate (%):</label>
+      <input type="number" id="rate" step="0.01" placeholder="e.g. 2" />
 
       <label for="years">Time (in years):</label>
-      <input type="number" id="years" min="0" step="0.01" required />
+      <input type="number" id="years" step="0.01" placeholder="e.g. 2" />
 
-      <div style="display:flex; justify-content: space-between;">
-        <button type="submit">Calculate Interest</button>
+      <div class="btn-group">
+        <button type="submit" id="calcBtn">Calculate</button>
         <button type="button" id="resetBtn">Reset</button>
       </div>
     </form>
-
     <div id="result"></div>
   </div>
 
   <script>
-    function formatAmount(amount) {
-      return amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
+    const principalInput = document.getElementById('principal');
     const form = document.getElementById('interestForm');
     const resetBtn = document.getElementById('resetBtn');
     const resultDiv = document.getElementById('result');
 
+    function formatIndianNumber(x) {
+      x = x.replace(/,/g, '');
+      if (x === '') return '';
+      let lastThree = x.slice(-3);
+      let other = x.slice(0, -3);
+      if (other !== '') lastThree = ',' + lastThree;
+      return other.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+    }
+
+    function parseNumber(str) {
+      return parseFloat(str.replace(/,/g, '')) || 0;
+    }
+
+    function formatAmount(amount) {
+      return amount.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
+
+    principalInput.addEventListener('input', () => {
+      const raw = principalInput.value.replace(/,/g, '');
+      principalInput.value = formatIndianNumber(raw);
+    });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const principal = parseFloat(document.getElementById('principal').value);
+      const principal = parseNumber(principalInput.value);
       const rate = parseFloat(document.getElementById('rate').value);
       const years = parseFloat(document.getElementById('years').value);
 
-      const months = years * 12;
-      const simpleInterest = (principal * rate * months) / 100;
-      const finalAmount = principal + simpleInterest;
+      if (principal <= 0 || rate <= 0 || years <= 0) {
+        resultDiv.innerText = "Please enter valid positive values.";
+        return;
+      }
 
-      resultDiv.innerText =
+      const months = years * 12;
+      const interest = (principal * rate * months) / 100;
+      const finalAmount = principal + interest;
+
+      resultDiv.innerText = 
         `Principal Amount:\n₹${formatAmount(principal)}\n\n` +
-        `Interest Amount:\n₹${formatAmount(simpleInterest)}\n\n` +
+        `Interest Amount:\n₹${formatAmount(interest)}\n\n` +
         `Final Amount:\n₹${formatAmount(finalAmount)}`;
     });
 
-    resetBtn.addEventListener('click', function () {
+    resetBtn.addEventListener('click', () => {
       form.reset();
       resultDiv.innerText = '';
     });
