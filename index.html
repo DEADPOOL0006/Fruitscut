@@ -101,9 +101,6 @@
       <label for="rate">Interest Rate (% per period):</label>
       <input type="number" id="rate" step="0.01" placeholder="e.g. 2" />
 
-      <label for="time">Time (in number of periods):</label>
-      <input type="number" id="time" placeholder="e.g. 24" />
-
       <label for="unit">Period Unit:</label>
       <select id="unit">
         <option value="days">Daily</option>
@@ -111,6 +108,9 @@
         <option value="months" selected>Monthly</option>
         <option value="years">Yearly</option>
       </select>
+
+      <label for="time">Time (in number of periods):</label>
+      <input type="number" id="time" placeholder="e.g. 24" />
 
       <div class="btn-group">
         <button type="submit" id="calcBtn">Calculate</button>
