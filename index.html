@@ -126,7 +126,6 @@
     const resetBtn = document.getElementById('resetBtn');
     const resultDiv = document.getElementById('result');
 
-    // Format input with Indian commas while typing
     function formatIndianNumber(x) {
       x = x.replace(/,/g, '');
       if (x === '') return '';
@@ -136,12 +135,10 @@
       return other.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
     }
 
-    // Parse number removing commas
     function parseNumber(str) {
       return parseFloat(str.replace(/,/g, '')) || 0;
     }
 
-    // Format amount with 2 decimals and Indian commas
     function formatAmount(amount) {
       return amount.toLocaleString('en-IN', {
         minimumFractionDigits: 2,
@@ -167,10 +164,21 @@
         return;
       }
 
-      // Interest calculation:
-      // Interest = Principal * Rate * Time / 100
-      // Time is in number of periods according to selected unit (no conversion)
-      const interest = (principal * rate * time) / 100;
+      let periods = time;
+
+      switch (unit) {
+        case "years":
+          periods = time * 12;
+          break;
+        case "weeks":
+          periods = (time * 7) / 30; // 1 week = 7 days logic
+          break;
+        case "days":
+          periods = time / 30; // approx days to months
+          break;
+      }
+
+      const interest = (principal * rate * periods) / 100;
       const finalAmount = principal + interest;
 
       resultDiv.innerText =
