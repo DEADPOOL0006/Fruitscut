@@ -89,6 +89,17 @@
       white-space: pre-line;
       color: #ffffff;
     }
+
+    #calcDetails {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: normal;
+      color: #aaffaa;
+      white-space: pre-line;
+      background: #222;
+      padding: 12px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -118,6 +129,7 @@
       </div>
     </form>
     <div id="result"></div>
+    <div id="calcDetails"></div>
   </div>
 
   <script>
@@ -125,6 +137,7 @@
     const form = document.getElementById('interestForm');
     const resetBtn = document.getElementById('resetBtn');
     const resultDiv = document.getElementById('result');
+    const calcDetailsDiv = document.getElementById('calcDetails');
 
     function formatIndianNumber(x) {
       x = x.replace(/,/g, '');
@@ -161,35 +174,54 @@
 
       if (principal <= 0 || rate <= 0 || time <= 0) {
         resultDiv.innerText = "Please enter valid positive values.";
+        calcDetailsDiv.innerText = "";
         return;
       }
 
-      let periods = time;
+      let periodsInMonths = time;
+      let unitDescription = "";
 
       switch (unit) {
         case "years":
-          periods = time * 12;
+          periodsInMonths = time * 12;
+          unitDescription = `${time} year(s) × 12 months = ${periodsInMonths.toFixed(2)} months`;
           break;
         case "weeks":
-          periods = (time * 7) / 30; // 1 week = 7 days logic
+          periodsInMonths = (time * 7) / 30; // 1 week = 7 days
+          unitDescription = `${time} week(s) × 7 days ÷ 30 days ≈ ${periodsInMonths.toFixed(2)} months`;
           break;
         case "days":
-          periods = time / 30; // approx days to months
+          periodsInMonths = time / 30;
+          unitDescription = `${time} day(s) ÷ 30 days ≈ ${periodsInMonths.toFixed(2)} months`;
+          break;
+        case "months":
+          periodsInMonths = time;
+          unitDescription = `${time} month(s)`;
           break;
       }
 
-      const interest = (principal * rate * periods) / 100;
+      const interest = (principal * rate * periodsInMonths) / 100;
       const finalAmount = principal + interest;
 
       resultDiv.innerText =
         `Principal Amount:\n₹${formatAmount(principal)}\n\n` +
         `Interest Amount:\n₹${formatAmount(interest)}\n\n` +
         `Final Amount:\n₹${formatAmount(finalAmount)}`;
+
+      calcDetailsDiv.innerText =
+        `Calculation Details:\n` +
+        `- Principal = ₹${formatAmount(principal)}\n` +
+        `- Interest Rate = ${rate.toFixed(2)}% per ${unit}\n` +
+        `- Time = ${time} ${unit}(s)\n` +
+        `- Converted Period (in months) = ${unitDescription}\n` +
+        `- Interest = (Principal × Rate × Periods) / 100\n` +
+        `- Interest = (${formatAmount(principal)} × ${rate.toFixed(2)} × ${periodsInMonths.toFixed(2)}) / 100 = ₹${formatAmount(interest)}`;
     });
 
     resetBtn.addEventListener('click', () => {
       form.reset();
       resultDiv.innerText = '';
+      calcDetailsDiv.innerText = '';
     });
   </script>
 </body>
