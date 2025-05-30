@@ -1,256 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Interest Calculator</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-    }
-    .container {
-      background-color: #1e1e1e;
-      border-radius: 15px;
-      padding: 30px 40px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.8);
-      max-width: 600px;
-      width: 100%;
-    }
-    h2 {
-      text-align: center;
-      font-size: 28px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    .date-group {
-      display: flex;
-      gap: 10px;
-    }
-    .date-group select {
-      flex: 1;
-    }
-    button {
-      padding: 10px 20px;
-      margin-top: 20px;
-      margin-right: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #03dac6;
-      color: #000;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #00bfa5;
-    }
-    .result {
-      margin-top: 25px;
-      font-size: 18px;
-    }
-    .result b {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .toggle-container {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .toggle-container button {
-      background-color: #333;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 2px solid #03dac6;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Interest Calculator (Months)</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #121212;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 0 10px rgba(0, 255, 100, 0.2);
+  }
+  h2 {
+    text-align: center;
+    color: #00ffaa;
+    margin-bottom: 24px;
+  }
+  label {
+    display: block;
+    margin-top: 16px;
+    font-weight: bold;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+  }
+  .date-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .date-row select {
+    flex: 1;
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  button {
+    padding: 10px;
+    width: 48%;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #calcBtn {
+    background-color: #00ffaa;
+    color: #000;
+  }
+  #calcBtn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+  }
+  #resetBtn {
+    background-color: #ff4d4d;
+    color: #fff;
+  }
+  #result {
+    margin-top: 24px;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: pre-line;
+    color: #ffffff;
+    min-height: 120px;
+    transition: opacity 0.5s ease;
+  }
+  #words {
+    font-size: 14px;
+    color: #ccc;
+    margin-top: 4px;
+    min-height: 20px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Interest Calculator</h2>
+<div class="container">
+  <h2>Interest Calculator (Months)</h2>
 
-    <div class="toggle-container">
-      <button onclick="toggleMode()">Switch to Date Mode</button>
-    </div>
+  <label for="principal">Principal (₹):</label>
+  <input type="text" id="principal" placeholder="Enter amount" autocomplete="off" />
+  <div id="words"></div>
 
-    <!-- BASIC MODE -->
-    <div id="basic-mode">
-      <label>Principal (₹):</label>
-      <input type="text" id="principal" placeholder="Enter amount" oninput="formatPrincipal(this)">
+  <label for="rate">Interest Rate (₹ per month):</label>
+  <input type="number" id="rate" step="0.01" placeholder="e.g. 2" autocomplete="off" />
 
-      <label>Interest Rate (% per period):</label>
-      <input type="number" id="rate" step="0.01">
-
-      <label>Period Unit:</label>
-      <select id="unit">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="monthly" selected>Monthly</option>
-        <option value="yearly">Yearly</option>
-      </select>
-
-      <label>Time (in number of periods):</label>
-      <input type="number" id="time">
-    </div>
-
-    <!-- DATE MODE -->
-    <div id="date-mode" class="hidden">
-      <label>Principal (₹):</label>
-      <input type="text" id="principalDate" placeholder="Enter amount" oninput="formatPrincipal(this)">
-
-      <label>Interest Rate (% per month):</label>
-      <input type="number" id="rateDate" step="0.01">
-
-      <label>Start Date:</label>
-      <div class="date-group">
-        <select id="startDay"></select>
-        <select id="startMonth"></select>
-        <select id="startYear"></select>
-      </div>
-
-      <label>End Date:</label>
-      <div class="date-group">
-        <select id="endDay"></select>
-        <select id="endMonth"></select>
-        <select id="endYear"></select>
-      </div>
-    </div>
-
-    <button onclick="calculate()">Calculate</button>
-    <button onclick="resetForm()">Reset</button>
-
-    <div class="result" id="result"></div>
+  <label>Start Date:</label>
+  <div class="date-row">
+    <select id="startDay"></select>
+    <select id="startMonth"></select>
+    <select id="startYear"></select>
   </div>
 
-  <script>
-    let isDateMode = false;
+  <label>End Date:</label>
+  <div class="date-row">
+    <select id="endDay"></select>
+    <select id="endMonth"></select>
+    <select id="endYear"></select>
+  </div>
 
-    function toggleMode() {
-      isDateMode = !isDateMode;
-      document.getElementById("basic-mode").classList.toggle("hidden", isDateMode);
-      document.getElementById("date-mode").classList.toggle("hidden", !isDateMode);
-      document.querySelector(".toggle-container button").innerText = isDateMode
-        ? "Switch to Basic Mode"
-        : "Switch to Date Mode";
-      document.getElementById("result").innerHTML = "";
-    }
+  <div class="buttons">
+    <button id="calcBtn" disabled>Calculate</button>
+    <button id="resetBtn">Reset</button>
+  </div>
 
-    function formatPrincipal(input) {
-      let value = input.value.replace(/,/g, '').replace(/[^\d]/g, '');
-      if (!isNaN(value)) {
-        input.value = Number(value).toLocaleString("en-IN");
-      }
-    }
+  <div id="result"></div>
+</div>
 
-    function getNumberValue(str) {
-      return parseFloat(str.replace(/,/g, '')) || 0;
-    }
+<script>
+const principalInput = document.getElementById("principal");
+const wordsDiv = document.getElementById("words");
+const resultDiv = document.getElementById("result");
+const calcBtn = document.getElementById("calcBtn");
 
-    function calculate() {
-      let principal, rate, periods;
+const startDay = document.getElementById("startDay");
+const startMonth = document.getElementById("startMonth");
+const startYear = document.getElementById("startYear");
 
-      if (isDateMode) {
-        principal = getNumberValue(document.getElementById("principalDate").value);
-        rate = parseFloat(document.getElementById("rateDate").value) || 0;
+const endDay = document.getElementById("endDay");
+const endMonth = document.getElementById("endMonth");
+const endYear = document.getElementById("endYear");
 
-        const sDay = parseInt(document.getElementById("startDay").value);
-        const sMonth = parseInt(document.getElementById("startMonth").value);
-        const sYear = parseInt(document.getElementById("startYear").value);
-        const eDay = parseInt(document.getElementById("endDay").value);
-        const eMonth = parseInt(document.getElementById("endMonth").value);
-        const eYear = parseInt(document.getElementById("endYear").value);
+function formatIndianNumber(x) {
+  x = x.replace(/,/g, '');
+  if (x === '') return '';
+  let lastThree = x.slice(-3);
+  let other = x.slice(0, -3);
+  if (other !== '') lastThree = ',' + lastThree;
+  return other.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+}
 
-        const startDate = new Date(sYear, sMonth - 1, sDay);
-        const endDate = new Date(eYear, eMonth - 1, eDay);
+function numberToWords(num) {
+  const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
 
-        if (endDate <= startDate) {
-          alert("End date must be after start date.");
-          return;
-        }
+  if (num === 0) return "Zero";
 
-        periods = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-                  (endDate.getMonth() - startDate.getMonth());
-      } else {
-        principal = getNumberValue(document.getElementById("principal").value);
-        rate = parseFloat(document.getElementById("rate").value) || 0;
-        const unit = document.getElementById("unit").value;
-        let time = parseInt(document.getElementById("time").value) || 0;
-        if (unit === "daily") {
-          periods = time;
-        } else if (unit === "weekly") {
-          periods = time * 7;
-        } else if (unit === "monthly") {
-          periods = time;
-        } else if (unit === "yearly") {
-          periods = time * 12;
-        }
-      }
+  function convert(n) {
+    if (n < 10) return ones[n];
+    if (n >= 10 && n < 20) return teens[n - 10];
+    if (n < 100) return tens[Math.floor(n / 10)] + " " + ones[n % 10];
+    if (n < 1000) return ones[Math.floor(n / 100)] + " Hundred " + convert(n % 100);
+    if (n < 100000) return convert(Math.floor(n / 1000)) + " Thousand " + convert(n % 1000);
+    if (n < 10000000) return convert(Math.floor(n / 100000)) + " Lakh " + convert(n % 100000);
+    return convert(Math.floor(n / 10000000)) + " Crore " + convert(n % 10000000);
+  }
 
-      const interest = (principal * rate * periods) / 100;
-      const finalAmount = principal + interest;
+  return convert(num).trim();
+}
 
-      document.getElementById("result").innerHTML = `
-        <b>Principal Amount: ₹${principal.toLocaleString("en-IN")}</b>
-        <b>Interest Amount: ₹${interest.toFixed(2).toLocaleString("en-IN")}</b>
-        <b>Final Amount: ₹${finalAmount.toFixed(2).toLocaleString("en-IN")}</b>
-        <br/><b>Calculation:</b>
-        ₹${principal.toLocaleString()} × ${rate}% × ${periods} = ₹${interest.toFixed(2)}
-      `;
-    }
+principalInput.addEventListener("input", () => {
+  let raw = principalInput.value.replace(/,/g, '');
+  if (!/^\d*$/.test(raw)) { // only allow digits
+    raw = raw.replace(/\D/g, '');
+  }
+  principalInput.value = formatIndianNumber(raw);
+  let numeric = parseInt(raw) || 0;
+  wordsDiv.innerText = numeric ? numberToWords(numeric) : '';
+  validateInputs();
+});
 
-    function resetForm() {
-      document.querySelectorAll("input").forEach(input => input.value = "");
-      document.getElementById("unit").value = "monthly";
-      document.getElementById("result").innerHTML = "";
-    }
+function populateDateSelects() {
+  const daySelects = [startDay, endDay];
+  const monthSelects = [startMonth, endMonth];
+  const yearSelects = [startYear, endYear];
 
-    function populateDateDropdowns() {
-      const days = Array.from({length: 31}, (_, i) => i + 1);
-      const months = Array.from({length: 12}, (_, i) => i + 1);
-      const years = Array.from({length: 50}, (_, i) => new Date().getFullYear() - 25 + i);
+  daySelects.forEach(sel => sel.options.length = 0);
+  monthSelects.forEach(sel => sel.options.length = 0);
+  yearSelects.forEach(sel => sel.options.length = 0);
 
-      const fields = ['startDay','endDay','startMonth','endMonth','startYear','endYear'];
-      for (let field of fields) {
-        let select = document.getElementById(field);
-        let data = field.includes('Day') ? days : field.includes('Month') ? months : years;
-        data.forEach(v => {
-          const opt = document.createElement('option');
-          opt.value = v;
-          opt.innerText = v;
-          select.appendChild(opt);
-        });
-      }
+  for (let d = 1; d <= 31; d++) {
+    daySelects.forEach(sel => sel.add(new Option(d, d)));
+  }
 
-      // Set current date as default
-      let now = new Date();
-      document.getElementById("startDay").value = now.getDate();
-      document.getElementById("startMonth").value = now.getMonth() + 1;
-      document.getElementById("startYear").value = now.getFullYear();
-      document.getElementById("endDay").value = now.getDate();
-      document.getElementById("endMonth").value = now.getMonth() + 1;
-      document.getElementById("endYear").value = now.getFullYear();
-    }
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  for (let m = 0; m < 12; m++) {
+    monthSelects.forEach(sel => sel.add(new Option(monthNames[m], m)));
+  }
 
-    populateDateDropdowns();
-  </script>
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear - 50; y <= currentYear + 10; y++) {
+    yearSelects.forEach(sel => sel.add(new Option(y, y)));
+  }
+}
+
+function setDefaultDates() {
+  const today = new Date();
+  startDay.value = today.getDate();
+  startMonth.value = today.getMonth();
+  startYear.value = today.getFullYear();
+
+  endDay.value = today.getDate();
+  endMonth.value = today.getMonth();
+  endYear.value = today.getFullYear();
+}
+
+function monthsDiff(start, end) {
+  let months = (end.getFullYear() - start.getFullYear()) * 12;
+  months += end.getMonth() - start.getMonth();
+
+  if (end.getDate() < start.getDate()) {
+    months -= 1;
+  }
+  return months >= 0 ? months : 0;
+}
+
+function validateInputs() {
+  const principalRaw = principalInput.value.replace(/,/g, '');
+  const rate = document.getElementById("rate").value;
+  const validPrincipal = /^\d+$/.test(principalRaw) && parseInt(principalRaw) > 0;
+  const validRate = !isNaN(rate) && parseFloat(rate) > 0;
+  const startValid = startDay.value && startMonth.value !== '' && startYear.value;
+  const endValid = endDay.value && endMonth.value !== '' && endYear.value;
+
+  calcBtn.disabled = !(validPrincipal && validRate && startValid && endValid);
+}
+
+calcBtn.addEventListener("click", () => {
+  const principal = parseInt(principalInput.value.replace(/,/g, ''));
+  const rate = parseFloat(document.getElementById("rate").value);
+
+  const sDate = new Date(parseInt(startYear.value), parseInt(startMonth.value), parseInt(startDay.value));
+  const eDate = new Date(parseInt(endYear.value), parseInt(endMonth.value), parseInt(endDay.value));
+
+  if (eDate < sDate) {
+    resultDiv.style.color = 'red';
+    resultDiv.innerText = "Error: End date must be after start date.";
+    return;
+  }
+
+  const totalMonths = monthsDiff(sDate, eDate);
+  const interest = (principal * totalMonths * rate) / 100;
+  const finalAmount = principal + interest;
+
+  resultDiv.style.color = '#00ffaa';
+  resultDiv.innerText =
+    `Principal: ₹${formatIndianNumber(principal.toString())}\n\n` +
+    `Period: ${totalMonths} month(s)\n\n` +
+    `Interest Amount: ₹${interest.toFixed(2)}\n\n` +
+    `Final Amount: ₹${finalAmount.toFixed(2)}`;
+});
+
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  principalInput.value = "";
+  wordsDiv.innerText = "";
+  document.getElementById("rate").value = "";
+  resultDiv.innerText = "";
+  resultDiv.style.color = '#fff';
+  setDefaultDates();
+  validateInputs();
+});
+
+// Init
+populateDateSelects();
+setDefaultDates();
+validateInputs();
+
+[startDay, startMonth, startYear, endDay, endMonth, endYear].forEach(el =>
+  el.addEventListener('change', validateInputs));
+document.getElementById("rate").addEventListener('input', validateInputs);
+
+</script>
 </body>
 </html>
