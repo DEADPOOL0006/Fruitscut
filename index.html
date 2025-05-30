@@ -2,195 +2,203 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Interest Calculator</title>
   <style>
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: #121212;
-      margin: 0;
-      padding: 0;
+      color: #fff;
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #fff;
+      align-items: start;
+      padding: 40px;
     }
-
     .container {
       background-color: #1e1e1e;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,255,100,0.2);
-      max-width: 500px;
-      width: 90%;
+      border-radius: 15px;
+      padding: 30px 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.8);
+      width: 100%;
+      max-width: 600px;
     }
-
-    h1 {
+    h2 {
       text-align: center;
-      margin-bottom: 24px;
-      color: #00ffaa;
+      margin-bottom: 20px;
+      font-size: 28px;
     }
-
     label {
       display: block;
-      margin: 18px 0 6px;
-      font-size: 16px;
+      margin-top: 15px;
+      font-weight: bold;
     }
-
     input, select {
       width: 100%;
       padding: 10px;
+      margin-top: 5px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 16px;
-      color: #000;
     }
-
-    .btn-group {
-      margin-top: 24px;
-      display: flex;
-      justify-content: space-between;
-    }
-
     button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    #calcBtn {
-      background-color: #00ffaa;
-      color: #000;
+      padding: 10px 20px;
+      margin-top: 20px;
       margin-right: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #03dac6;
+      color: #000;
+      cursor: pointer;
     }
-
-    #calcBtn:hover {
-      background-color: #00cc88;
+    button:hover {
+      background-color: #00bfa5;
     }
-
-    #resetBtn {
-      background-color: #ff4d4d;
-      color: #fff;
-    }
-
-    #resetBtn:hover {
-      background-color: #cc0000;
-    }
-
-    #result {
-      margin-top: 30px;
+    .result {
+      margin-top: 25px;
       font-size: 18px;
-      font-weight: bold;
-      white-space: pre-line;
-      color: #ffffff;
+    }
+    .result b {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .toggle-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .toggle-container button {
+      background-color: #333;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #03dac6;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Interest Calculator</h1>
-    <form id="interestForm" autocomplete="off">
+    <h2>Interest Calculator</h2>
+
+    <div class="toggle-container">
+      <button onclick="toggleMode()">Switch to Date Mode</button>
+    </div>
+
+    <!-- BASIC MODE -->
+    <div id="basic-mode">
       <label for="principal">Principal (₹):</label>
-      <input type="text" id="principal" placeholder="Enter amount" />
+      <input type="text" id="principal" placeholder="Enter amount" oninput="formatPrincipal(this)">
 
       <label for="rate">Interest Rate (% per period):</label>
-      <input type="number" id="rate" step="0.01" placeholder="e.g. 2" />
+      <input type="number" id="rate" step="0.01" placeholder="e.g., 2">
 
       <label for="unit">Period Unit:</label>
       <select id="unit">
-        <option value="days">Daily</option>
-        <option value="weeks">Weekly</option>
-        <option value="months" selected>Monthly</option>
-        <option value="years">Yearly</option>
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly" selected>Monthly</option>
+        <option value="yearly">Yearly</option>
       </select>
 
       <label for="time">Time (in number of periods):</label>
-      <input type="number" id="time" placeholder="e.g. 24" />
+      <input type="number" id="time" placeholder="e.g., 24">
+    </div>
 
-      <div class="btn-group">
-        <button type="submit" id="calcBtn">Calculate</button>
-        <button type="button" id="resetBtn">Reset</button>
-      </div>
-    </form>
-    <div id="result"></div>
+    <!-- DATE MODE -->
+    <div id="date-mode" class="hidden">
+      <label for="principalDate">Principal (₹):</label>
+      <input type="text" id="principalDate" placeholder="Enter amount" oninput="formatPrincipal(this)">
+
+      <label for="rateDate">Interest Rate (% per month):</label>
+      <input type="number" id="rateDate" step="0.01">
+
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate">
+
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate">
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+    <button onclick="resetForm()">Reset</button>
+
+    <div class="result" id="result"></div>
   </div>
 
   <script>
-    const principalInput = document.getElementById('principal');
-    const form = document.getElementById('interestForm');
-    const resetBtn = document.getElementById('resetBtn');
-    const resultDiv = document.getElementById('result');
+    let isDateMode = false;
 
-    function formatIndianNumber(x) {
-      x = x.replace(/,/g, '');
-      if (x === '') return '';
-      let lastThree = x.slice(-3);
-      let other = x.slice(0, -3);
-      if (other !== '') lastThree = ',' + lastThree;
-      return other.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+    function toggleMode() {
+      isDateMode = !isDateMode;
+      document.getElementById("basic-mode").classList.toggle("hidden", isDateMode);
+      document.getElementById("date-mode").classList.toggle("hidden", !isDateMode);
+      document.querySelector(".toggle-container button").innerText = isDateMode
+        ? "Switch to Basic Mode"
+        : "Switch to Date Mode";
+      document.getElementById("result").innerHTML = "";
     }
 
-    function parseNumber(str) {
+    function formatPrincipal(input) {
+      let value = input.value.replace(/,/g, '').replace(/[^\d]/g, '');
+      if (!isNaN(value)) {
+        input.value = Number(value).toLocaleString("en-IN");
+      }
+    }
+
+    function getNumberValue(str) {
       return parseFloat(str.replace(/,/g, '')) || 0;
     }
 
-    function formatAmount(amount) {
-      return amount.toLocaleString('en-IN', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    }
+    function calculate() {
+      let principal, rate, periods;
 
-    principalInput.addEventListener('input', () => {
-      const raw = principalInput.value.replace(/,/g, '');
-      principalInput.value = formatIndianNumber(raw);
-    });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const principal = parseNumber(principalInput.value);
-      const rate = parseFloat(document.getElementById('rate').value);
-      const time = parseFloat(document.getElementById('time').value);
-      const unit = document.getElementById('unit').value;
-
-      if (principal <= 0 || rate <= 0 || time <= 0) {
-        resultDiv.innerText = "Please enter valid positive values.";
-        return;
-      }
-
-      let periods = time;
-
-      switch (unit) {
-        case "years":
+      if (isDateMode) {
+        principal = getNumberValue(document.getElementById("principalDate").value);
+        rate = parseFloat(document.getElementById("rateDate").value) || 0;
+        const start = new Date(document.getElementById("startDate").value);
+        const end = new Date(document.getElementById("endDate").value);
+        if (end <= start) {
+          alert("End date must be after start date.");
+          return;
+        }
+        periods = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+      } else {
+        principal = getNumberValue(document.getElementById("principal").value);
+        rate = parseFloat(document.getElementById("rate").value) || 0;
+        const unit = document.getElementById("unit").value;
+        let time = parseInt(document.getElementById("time").value) || 0;
+        if (unit === "daily") {
+          periods = time;
+        } else if (unit === "weekly") {
+          periods = time * (7); // 1 week = 7 days
+        } else if (unit === "monthly") {
+          periods = time;
+        } else if (unit === "yearly") {
           periods = time * 12;
-          break;
-        case "weeks":
-          periods = (time * 7) / 30; // 1 week = 7 days logic
-          break;
-        case "days":
-          periods = time / 30; // approx days to months
-          break;
+        }
       }
 
       const interest = (principal * rate * periods) / 100;
       const finalAmount = principal + interest;
 
-      resultDiv.innerText =
-        `Principal Amount:\n₹${formatAmount(principal)}\n\n` +
-        `Interest Amount:\n₹${formatAmount(interest)}\n\n` +
-        `Final Amount:\n₹${formatAmount(finalAmount)}`;
-    });
+      document.getElementById("result").innerHTML = `
+        <b>Principal Amount: ₹${principal.toLocaleString("en-IN")}</b>
+        <b>Interest Amount: ₹${interest.toFixed(2).toLocaleString("en-IN")}</b>
+        <b>Final Amount: ₹${finalAmount.toFixed(2).toLocaleString("en-IN")}</b>
+        <br/>
+        <b>Calculation:</b>
+        Principal (₹) × Rate (%) × Time = ₹${principal.toLocaleString()} × ${rate}% × ${periods} = ₹${interest.toFixed(2)}
+      `;
+    }
 
-    resetBtn.addEventListener('click', () => {
-      form.reset();
-      resultDiv.innerText = '';
-    });
+    function resetForm() {
+      document.querySelectorAll("input").forEach(input => input.value = "");
+      document.getElementById("unit").value = "monthly";
+      document.getElementById("result").innerHTML = "";
+    }
   </script>
 </body>
 </html>
