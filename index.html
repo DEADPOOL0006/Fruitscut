@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Interest Calculator</title>
   <style>
@@ -12,7 +12,6 @@
       color: #fff;
       display: flex;
       justify-content: center;
-      align-items: start;
       padding: 40px;
     }
     .container {
@@ -20,12 +19,11 @@
       border-radius: 15px;
       padding: 30px 40px;
       box-shadow: 0 0 10px rgba(0,0,0,0.8);
-      width: 100%;
       max-width: 600px;
+      width: 100%;
     }
     h2 {
       text-align: center;
-      margin-bottom: 20px;
       font-size: 28px;
     }
     label {
@@ -40,6 +38,13 @@
       border: none;
       border-radius: 8px;
       font-size: 16px;
+    }
+    .date-group {
+      display: flex;
+      gap: 10px;
+    }
+    .date-group select {
+      flex: 1;
     }
     button {
       padding: 10px 20px;
@@ -89,13 +94,13 @@
 
     <!-- BASIC MODE -->
     <div id="basic-mode">
-      <label for="principal">Principal (₹):</label>
+      <label>Principal (₹):</label>
       <input type="text" id="principal" placeholder="Enter amount" oninput="formatPrincipal(this)">
 
-      <label for="rate">Interest Rate (% per period):</label>
-      <input type="number" id="rate" step="0.01" placeholder="e.g., 2">
+      <label>Interest Rate (% per period):</label>
+      <input type="number" id="rate" step="0.01">
 
-      <label for="unit">Period Unit:</label>
+      <label>Period Unit:</label>
       <select id="unit">
         <option value="daily">Daily</option>
         <option value="weekly">Weekly</option>
@@ -103,23 +108,31 @@
         <option value="yearly">Yearly</option>
       </select>
 
-      <label for="time">Time (in number of periods):</label>
-      <input type="number" id="time" placeholder="e.g., 24">
+      <label>Time (in number of periods):</label>
+      <input type="number" id="time">
     </div>
 
     <!-- DATE MODE -->
     <div id="date-mode" class="hidden">
-      <label for="principalDate">Principal (₹):</label>
+      <label>Principal (₹):</label>
       <input type="text" id="principalDate" placeholder="Enter amount" oninput="formatPrincipal(this)">
 
-      <label for="rateDate">Interest Rate (% per month):</label>
+      <label>Interest Rate (% per month):</label>
       <input type="number" id="rateDate" step="0.01">
 
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate">
+      <label>Start Date:</label>
+      <div class="date-group">
+        <select id="startDay"></select>
+        <select id="startMonth"></select>
+        <select id="startYear"></select>
+      </div>
 
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate">
+      <label>End Date:</label>
+      <div class="date-group">
+        <select id="endDay"></select>
+        <select id="endMonth"></select>
+        <select id="endYear"></select>
+      </div>
     </div>
 
     <button onclick="calculate()">Calculate</button>
@@ -158,13 +171,24 @@
       if (isDateMode) {
         principal = getNumberValue(document.getElementById("principalDate").value);
         rate = parseFloat(document.getElementById("rateDate").value) || 0;
-        const start = new Date(document.getElementById("startDate").value);
-        const end = new Date(document.getElementById("endDate").value);
-        if (end <= start) {
+
+        const sDay = parseInt(document.getElementById("startDay").value);
+        const sMonth = parseInt(document.getElementById("startMonth").value);
+        const sYear = parseInt(document.getElementById("startYear").value);
+        const eDay = parseInt(document.getElementById("endDay").value);
+        const eMonth = parseInt(document.getElementById("endMonth").value);
+        const eYear = parseInt(document.getElementById("endYear").value);
+
+        const startDate = new Date(sYear, sMonth - 1, sDay);
+        const endDate = new Date(eYear, eMonth - 1, eDay);
+
+        if (endDate <= startDate) {
           alert("End date must be after start date.");
           return;
         }
-        periods = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+
+        periods = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+                  (endDate.getMonth() - startDate.getMonth());
       } else {
         principal = getNumberValue(document.getElementById("principal").value);
         rate = parseFloat(document.getElementById("rate").value) || 0;
@@ -173,7 +197,7 @@
         if (unit === "daily") {
           periods = time;
         } else if (unit === "weekly") {
-          periods = time * (7); // 1 week = 7 days
+          periods = time * 7;
         } else if (unit === "monthly") {
           periods = time;
         } else if (unit === "yearly") {
@@ -188,9 +212,8 @@
         <b>Principal Amount: ₹${principal.toLocaleString("en-IN")}</b>
         <b>Interest Amount: ₹${interest.toFixed(2).toLocaleString("en-IN")}</b>
         <b>Final Amount: ₹${finalAmount.toFixed(2).toLocaleString("en-IN")}</b>
-        <br/>
-        <b>Calculation:</b>
-        Principal (₹) × Rate (%) × Time = ₹${principal.toLocaleString()} × ${rate}% × ${periods} = ₹${interest.toFixed(2)}
+        <br/><b>Calculation:</b>
+        ₹${principal.toLocaleString()} × ${rate}% × ${periods} = ₹${interest.toFixed(2)}
       `;
     }
 
@@ -199,6 +222,35 @@
       document.getElementById("unit").value = "monthly";
       document.getElementById("result").innerHTML = "";
     }
+
+    function populateDateDropdowns() {
+      const days = Array.from({length: 31}, (_, i) => i + 1);
+      const months = Array.from({length: 12}, (_, i) => i + 1);
+      const years = Array.from({length: 50}, (_, i) => new Date().getFullYear() - 25 + i);
+
+      const fields = ['startDay','endDay','startMonth','endMonth','startYear','endYear'];
+      for (let field of fields) {
+        let select = document.getElementById(field);
+        let data = field.includes('Day') ? days : field.includes('Month') ? months : years;
+        data.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.innerText = v;
+          select.appendChild(opt);
+        });
+      }
+
+      // Set current date as default
+      let now = new Date();
+      document.getElementById("startDay").value = now.getDate();
+      document.getElementById("startMonth").value = now.getMonth() + 1;
+      document.getElementById("startYear").value = now.getFullYear();
+      document.getElementById("endDay").value = now.getDate();
+      document.getElementById("endMonth").value = now.getMonth() + 1;
+      document.getElementById("endYear").value = now.getFullYear();
+    }
+
+    populateDateDropdowns();
   </script>
 </body>
 </html>
