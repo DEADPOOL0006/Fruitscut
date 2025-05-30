@@ -2,121 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interest Calculator (Months)</title>
 <style>
+  :root {
+    --primary-color: #00ffaa;
+    --error-color: #ff4d4d;
+    --bg-dark: #121212;
+    --container-bg: #1e1e1e;
+    --border-color: #00ffaa33;
+    --input-bg: #333;
+    --text-light: #fff;
+    --text-secondary: #ccc;
+  }
+  
   body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #121212;
-    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    padding: 16px;
   }
-.container {
-  background-color: #1e1e1e;
-  padding: 50px 60px;
-  border-radius: 12px;
-  max-width: 1100px;
-  width: 90%;
-  border: 1px solid #00ffaa33;
-  font-size: 20px;
-  line-height: 1.6;
-  transition: max-width 0.4s ease, padding 0.4s ease;
-}
-
-@media (max-width: 900px) {
+  
   .container {
-    max-width: 95%;
-    padding: 35px 40px;
+    background-color: var(--container-bg);
+    padding: 40px 50px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid var(--border-color);
     font-size: 18px;
+    line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
-}
 
-@media (max-width: 600px) {
-  .container {
-    max-width: 95%;
-    padding: 25px 20px;
-    font-size: 16px;
+  @media (min-width: 1200px) {
+    .container {
+      max-width: 700px;
+      padding: 50px 60px;
+    }
   }
-}
 
+  @media (max-width: 768px) {
+    .container {
+      padding: 30px;
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 20px 16px;
+    }
+  }
 
   h2 {
     text-align: center;
-    color: #00ffaa;
+    color: var(--primary-color);
     margin-bottom: 24px;
+    font-size: 1.8em;
   }
+
   label {
     display: block;
     margin-top: 16px;
-    font-weight: bold;
+    font-weight: 600;
   }
+
   input, select {
     width: 100%;
-    padding: 10px;
-    margin-top: 6px;
+    padding: 12px;
+    margin-top: 8px;
     font-size: 16px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: none;
-    background-color: #333;
-    color: #fff;
+    background-color: var(--input-bg);
+    color: var(--text-light);
+    box-sizing: border-box;
   }
+
+  input:focus, select:focus {
+    outline: 2px solid var(--primary-color);
+  }
+
   .date-row {
     display: flex;
     justify-content: space-between;
     gap: 10px;
   }
+
   .date-row select {
     flex: 1;
+    min-width: 0;
   }
+
   .buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 24px;
+    gap: 12px;
   }
+
   button {
-    padding: 10px;
-    width: 48%;
+    padding: 12px;
+    flex: 1;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
   }
+
   #calcBtn {
-    background-color: #00ffaa;
+    background-color: var(--primary-color);
     color: #000;
   }
+
   #calcBtn:disabled {
     background-color: #555;
+    color: #999;
     cursor: not-allowed;
   }
-  #resetBtn {
-    background-color: #ff4d4d;
-    color: #fff;
+
+  #calcBtn:not(:disabled):hover {
+    background-color: #00e699;
+    transform: translateY(-2px);
   }
+
+  #resetBtn {
+    background-color: var(--error-color);
+    color: var(--text-light);
+  }
+
+  #resetBtn:hover {
+    background-color: #e64444;
+    transform: translateY(-2px);
+  }
+
   #result {
     margin-top: 24px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     white-space: pre-line;
-    color: #ffffff;
+    color: var(--text-light);
     opacity: 0;
     max-height: 0;
     overflow: hidden;
     transition: opacity 0.5s ease, max-height 0.5s ease;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0;
+    border-radius: 8px;
   }
+
   #result.visible {
     opacity: 1;
-    max-height: 500px; /* enough height for text */
+    max-height: 500px;
+    padding: 16px;
   }
+
   #words {
     font-size: 14px;
-    color: #ccc;
+    color: var(--text-secondary);
     margin-top: 4px;
     min-height: 20px;
+  }
+
+  /* For very small devices */
+  @media (max-width: 360px) {
+    .date-row {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .buttons {
+      flex-direction: column;
+    }
+    
+    button {
+      width: 100%;
+    }
   }
 </style>
 </head>
@@ -128,7 +197,7 @@
   <input type="text" id="principal" placeholder="Enter amount" autocomplete="off" />
   <div id="words"></div>
 
-  <label for="rate">Interest Rate (₹ per month):</label>
+  <label for="rate">Interest Rate (% per month):</label>
   <input type="number" id="rate" step="0.01" placeholder="e.g. 2" autocomplete="off" />
 
   <label>Start Date:</label>
@@ -154,7 +223,6 @@
 </div>
 
 <script>
-
 const principalInput = document.getElementById("principal");
 const wordsDiv = document.getElementById("words");
 const resultDiv = document.getElementById("result");
@@ -199,7 +267,7 @@ function numberToWords(num) {
 
 principalInput.addEventListener("input", () => {
   let raw = principalInput.value.replace(/,/g, '');
-  if (!/^\d*$/.test(raw)) { // only allow digits
+  if (!/^\d*$/.test(raw)) {
     raw = raw.replace(/\D/g, '');
   }
   principalInput.value = formatIndianNumber(raw);
@@ -213,22 +281,37 @@ function populateDateSelects() {
   const monthSelects = [startMonth, endMonth];
   const yearSelects = [startYear, endYear];
 
-  daySelects.forEach(sel => sel.options.length = 0);
-  monthSelects.forEach(sel => sel.options.length = 0);
-  yearSelects.forEach(sel => sel.options.length = 0);
+  daySelects.forEach(sel => sel.innerHTML = '');
+  monthSelects.forEach(sel => sel.innerHTML = '');
+  yearSelects.forEach(sel => sel.innerHTML = '');
 
   for (let d = 1; d <= 31; d++) {
-    daySelects.forEach(sel => sel.add(new Option(d, d)));
+    daySelects.forEach(sel => {
+      const option = document.createElement("option");
+      option.value = d;
+      option.textContent = d;
+      sel.appendChild(option);
+    });
   }
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   for (let m = 0; m < 12; m++) {
-    monthSelects.forEach(sel => sel.add(new Option(monthNames[m], m)));
+    monthSelects.forEach(sel => {
+      const option = document.createElement("option");
+      option.value = m;
+      option.textContent = monthNames[m];
+      sel.appendChild(option);
+    });
   }
 
   const currentYear = new Date().getFullYear();
   for (let y = currentYear - 50; y <= currentYear + 10; y++) {
-    yearSelects.forEach(sel => sel.add(new Option(y, y)));
+    yearSelects.forEach(sel => {
+      const option = document.createElement("option");
+      option.value = y;
+      option.textContent = y;
+      sel.appendChild(option);
+    });
   }
 }
 
@@ -238,12 +321,14 @@ function setDefaultDates() {
   startMonth.value = today.getMonth();
   startYear.value = today.getFullYear();
 
-  endDay.value = today.getDate();
-  endMonth.value = today.getMonth();
-  endYear.value = today.getFullYear();
+  // Set end date to 1 month from today by default
+  const nextMonth = new Date(today);
+  nextMonth.setMonth(today.getMonth() + 1);
+  endDay.value = nextMonth.getDate();
+  endMonth.value = nextMonth.getMonth();
+  endYear.value = nextMonth.getFullYear();
 }
 
-// Calculate difference in years, months, days between two dates
 function dateDiffYMD(start, end) {
   let years = end.getFullYear() - start.getFullYear();
   let months = end.getMonth() - start.getMonth();
@@ -251,7 +336,9 @@ function dateDiffYMD(start, end) {
 
   if (days < 0) {
     months -= 1;
-    days += 30; // assuming 30 days in a month for calculation
+    // Get days in previous month
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    days += prevMonth.getDate();
   }
   if (months < 0) {
     years -= 1;
@@ -279,8 +366,8 @@ calcBtn.addEventListener("click", () => {
   const eDate = new Date(parseInt(endYear.value), parseInt(endMonth.value), parseInt(endDay.value));
 
   if (eDate < sDate) {
-    resultDiv.style.color = 'red';
-    resultDiv.innerText = "Error: End date must be after start date.";
+    resultDiv.style.color = 'var(--error-color)';
+    resultDiv.textContent = "Error: End date must be after start date.";
     resultDiv.classList.add('visible');
     return;
   }
@@ -288,41 +375,54 @@ calcBtn.addEventListener("click", () => {
   const diff = dateDiffYMD(sDate, eDate);
   const totalMonths = diff.years * 12 + diff.months;
 
-  // Interest for full months (years + months)
+  // Interest for full months
   const interestMonths = (principal * totalMonths * rate) / 100;
 
-  // Interest for remaining days (daily interest, assuming 30 days/month)
-  const interestDays = (principal * rate * diff.days) / (100 * 30);
+  // Interest for remaining days (using exact days in month)
+  const daysInMonth = new Date(eDate.getFullYear(), eDate.getMonth() + 1, 0).getDate();
+  const interestDays = (principal * rate * diff.days) / (100 * daysInMonth);
 
   const totalInterest = interestMonths + interestDays;
   const finalAmount = principal + totalInterest;
 
-  resultDiv.style.color = '#00ffaa';
-  resultDiv.innerText =
-    `Principal: ₹${formatIndianNumber(principal.toString())}\n\n` +
-    `Duration: ${diff.years} Years, ${diff.months} Months, ${diff.days} Days\n\n` +
-    `Interest: ₹${totalInterest.toFixed(2)}\n\n` +
-    `Final Amount: ₹${finalAmount.toFixed(2)}`;
+  resultDiv.style.color = 'var(--primary-color)';
+  resultDiv.innerHTML =
+    `<strong>Principal:</strong> ₹${formatIndianNumber(principal.toString())}<br><br>` +
+    `<strong>Duration:</strong> ${diff.years} Years, ${diff.months} Months, ${diff.days} Days<br><br>` +
+    `<strong>Interest:</strong> ₹${totalInterest.toFixed(2)}<br><br>` +
+    `<strong>Final Amount:</strong> ₹${finalAmount.toFixed(2)}`;
   resultDiv.classList.add('visible');
 });
 
 document.getElementById("rate").addEventListener("input", validateInputs);
-[startDay, startMonth, startYear, endDay, endMonth, endYear].forEach(sel => sel.addEventListener("change", validateInputs));
+[startDay, startMonth, startYear, endDay, endMonth, endYear].forEach(sel => {
+  sel.addEventListener("change", validateInputs);
+});
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   principalInput.value = '';
-  wordsDiv.innerText = '';
+  wordsDiv.textContent = '';
   document.getElementById("rate").value = '';
   setDefaultDates();
-  resultDiv.innerText = '';
+  resultDiv.textContent = '';
   resultDiv.classList.remove('visible');
   calcBtn.disabled = true;
 });
 
+// Initialize
 populateDateSelects();
 setDefaultDates();
 validateInputs();
 
+// Better mobile experience: prevent zoom on input focus
+document.addEventListener('DOMContentLoaded', function() {
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    let viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    }
+  }
+});
 </script>
 </body>
 </html>
