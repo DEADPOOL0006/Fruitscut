@@ -2,56 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Interest Calculator (Months)</title>
 <style>
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background-color: #121212;
     color: #fff;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
   }
   .container {
     background-color: #1e1e1e;
     padding: 30px;
     border-radius: 12px;
     max-width: 700px;
-    width: 100%;
+    width: 90%;
     box-shadow: 0 0 10px rgba(0, 255, 100, 0.2);
   }
   h2 {
     text-align: center;
     color: #00ffaa;
     margin-bottom: 24px;
-    font-size: 1.8rem;
   }
   label {
     display: block;
     margin-top: 16px;
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: bold;
   }
   input, select {
     width: 100%;
     padding: 10px;
     margin-top: 6px;
-    font-size: 1rem;
+    font-size: 16px;
     border-radius: 6px;
     border: none;
     background-color: #333;
     color: #fff;
-    box-sizing: border-box;
   }
   .date-row {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-top: 6px;
   }
   .date-row select {
     flex: 1;
@@ -60,20 +54,19 @@
     display: flex;
     justify-content: space-between;
     margin-top: 24px;
-    gap: 10px;
   }
   button {
-    padding: 12px;
+    padding: 10px;
+    width: 48%;
     border: none;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
   #calcBtn {
     background-color: #00ffaa;
     color: #000;
-    flex: 1;
   }
   #calcBtn:disabled {
     background-color: #555;
@@ -82,14 +75,13 @@
   #resetBtn {
     background-color: #ff4d4d;
     color: #fff;
-    flex: 1;
   }
   #result {
     margin-top: 24px;
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: bold;
     white-space: pre-line;
-    color: #00ffaa;
+    color: #ffffff;
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -97,60 +89,13 @@
   }
   #result.visible {
     opacity: 1;
-    max-height: 500px;
+    max-height: 500px; /* enough height for text */
   }
   #words {
-    font-size: 0.9rem;
+    font-size: 14px;
     color: #ccc;
     margin-top: 4px;
     min-height: 20px;
-  }
-
-  /* Responsive styles for mobile */
-  @media (max-width: 600px) {
-    body {
-      padding: 10px;
-      align-items: stretch;
-    }
-    .container {
-      padding: 20px;
-      box-shadow: none;
-    }
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-    label {
-      font-size: 0.95rem;
-    }
-    input, select {
-      font-size: 1rem;
-      padding: 12px;
-    }
-    .date-row {
-      flex-direction: column;
-      gap: 12px;
-    }
-    .date-row select {
-      flex: none;
-      width: 100%;
-    }
-    .buttons {
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    button {
-      width: 100%;
-      font-size: 1.1rem;
-      padding: 14px;
-    }
-    #result {
-      font-size: 1rem;
-    }
-    #words {
-      font-size: 0.85rem;
-    }
   }
 </style>
 </head>
@@ -188,6 +133,7 @@
 </div>
 
 <script>
+
 const principalInput = document.getElementById("principal");
 const wordsDiv = document.getElementById("words");
 const resultDiv = document.getElementById("result");
@@ -232,7 +178,7 @@ function numberToWords(num) {
 
 principalInput.addEventListener("input", () => {
   let raw = principalInput.value.replace(/,/g, '');
-  if (!/^\d*$/.test(raw)) {
+  if (!/^\d*$/.test(raw)) { // only allow digits
     raw = raw.replace(/\D/g, '');
   }
   principalInput.value = formatIndianNumber(raw);
@@ -276,75 +222,71 @@ function setDefaultDates() {
   endYear.value = today.getFullYear();
 }
 
-function validateInputs() {
-  const principal = parseInt(principalInput.value.replace(/,/g, ''));
-  const rate = parseFloat(document.getElementById("rate").value);
-  if (!principal || principal <= 0 || !rate || rate <= 0) {
-    calcBtn.disabled = true;
-    return;
-  }
+// Calculate difference in years, months, days between two dates
+function dateDiffYMD(start, end) {
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
 
-  // Date validation: End date must be >= start date
-  const startDate = new Date(startYear.value, startMonth.value, startDay.value);
-  const endDate = new Date(endYear.value, endMonth.value, endDay.value);
-  if (endDate < startDate) {
-    calcBtn.disabled = true;
-    return;
+  if (days < 0) {
+    months -= 1;
+    days += 30; // assuming 30 days in a month for calculation
   }
-  calcBtn.disabled = false;
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+  return { years, months, days };
 }
 
-function calculateMonthsDiff(start, end) {
-  let yearsDiff = end.getFullYear() - start.getFullYear();
-  let monthsDiff = end.getMonth() - start.getMonth();
-  let daysDiff = end.getDate() - start.getDate();
+function validateInputs() {
+  const principalRaw = principalInput.value.replace(/,/g, '');
+  const rate = document.getElementById("rate").value;
+  const validPrincipal = /^\d+$/.test(principalRaw) && parseInt(principalRaw) > 0;
+  const validRate = !isNaN(rate) && parseFloat(rate) > 0;
+  const startValid = startDay.value && startMonth.value !== '' && startYear.value;
+  const endValid = endDay.value && endMonth.value !== '' && endYear.value;
 
-  let totalMonths = yearsDiff * 12 + monthsDiff;
-  if (daysDiff < 0) {
-    totalMonths -= 1;
-    daysDiff += 30;
-  }
-
-  let fractionalMonth = daysDiff / 30;
-
-  return totalMonths + fractionalMonth;
+  calcBtn.disabled = !(validPrincipal && validRate && startValid && endValid);
 }
 
 calcBtn.addEventListener("click", () => {
   const principal = parseInt(principalInput.value.replace(/,/g, ''));
   const rate = parseFloat(document.getElementById("rate").value);
 
-  const startDate = new Date(startYear.value, startMonth.value, startDay.value);
-  const endDate = new Date(endYear.value, endMonth.value, endDay.value);
+  const sDate = new Date(parseInt(startYear.value), parseInt(startMonth.value), parseInt(startDay.value));
+  const eDate = new Date(parseInt(endYear.value), parseInt(endMonth.value), parseInt(endDay.value));
 
-  const months = calculateMonthsDiff(startDate, endDate);
-  if (months <= 0) {
-    resultDiv.innerText = "End date must be after Start date.";
+  if (eDate < sDate) {
+    resultDiv.style.color = 'red';
+    resultDiv.innerText = "Error: End date must be after start date.";
     resultDiv.classList.add('visible');
     return;
   }
 
-  // Interest = Principal * Months * Rate / 100
-  // Here rate is given as fixed rupees per month, so no division by 100
-  // But per your earlier notes, rate is fixed rupees per month, so interest = principal * months * rate / 100 is for percentage rate
-  // Adjusting for fixed rate per month:
-  // Use interest = rate * months (fixed amount per month), principal is only displayed, no multiplication
-  // But your input label says "Interest Rate (₹ per month)" so interest = rate * months
-  const interestAmount = rate * months;
-  const finalAmount = principal + interestAmount;
+  const diff = dateDiffYMD(sDate, eDate);
+  const totalMonths = diff.years * 12 + diff.months;
 
-  resultDiv.innerText = 
-    `Principal: ₹${principalInput.value}\n` +
-    `Interest Rate (₹ per month): ₹${rate.toFixed(2)}\n` +
-    `Time Duration: ${months.toFixed(2)} months\n` +
-    `Interest Amount: ₹${interestAmount.toFixed(2)}\n` +
+  // Interest for full months (years + months)
+  const interestMonths = (principal * totalMonths * rate) / 100;
+
+  // Interest for remaining days (daily interest, assuming 30 days/month)
+  const interestDays = (principal * rate * diff.days) / (100 * 30);
+
+  const totalInterest = interestMonths + interestDays;
+  const finalAmount = principal + totalInterest;
+
+  resultDiv.style.color = '#00ffaa';
+  resultDiv.innerText =
+    `Principal: ₹${formatIndianNumber(principal.toString())}\n\n` +
+    `Duration: ${diff.years} Years, ${diff.months} Months, ${diff.days} Days\n\n` +
+    `Interest: ₹${totalInterest.toFixed(2)}\n\n` +
     `Final Amount: ₹${finalAmount.toFixed(2)}`;
-
   resultDiv.classList.add('visible');
 });
 
-[startDay, startMonth, startYear, endDay, endMonth, endYear].forEach(sel => sel.addEventListener("change", validateInputs));
 document.getElementById("rate").addEventListener("input", validateInputs);
+[startDay, startMonth, startYear, endDay, endMonth, endYear].forEach(sel => sel.addEventListener("change", validateInputs));
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   principalInput.value = '';
@@ -359,6 +301,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 populateDateSelects();
 setDefaultDates();
 validateInputs();
+
 </script>
 </body>
 </html>
